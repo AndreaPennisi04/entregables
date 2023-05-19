@@ -54,13 +54,13 @@
 		"id": 6
 	},
 	{
+		"id": 7,
 		"title": "Kia EV 9",
 		"description": "The Kia EV9 exudes a sense of serene contemporary calmness befitting a sophisticated EV for a new age of sustainable mobility. Yet, it also portrays the confident surety of a bold SUV poised to conquer all conditions.",
-		"price": "TBC",
+		"price": 55555,
 		"thumbnail": "https://i.dailymail.co.uk/1s/2023/01/20/17/66797443-0-image-a-7_1674237495623.jpg",
 		"code": "007",
-		"stock": "",
-		"id": 7
+		"stock": 3
 	},
 	{
 		"title": "Kia Ceed",
