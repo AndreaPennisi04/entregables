@@ -1,0 +1,92 @@
+[
+  {
+    "title": "Kia Sorrento",
+    "description": "Diesel",
+    "price": 47000,
+    "thumbnail": "Images not available",
+    "code": "001",
+    "stock": "6",
+    "id": 1
+  },
+  {
+    "title": "Kia EV6",
+    "description": "Kia electric vehicles, or EVs, run solely on electricity. This offers quiet operation, zero tailgate emissions and breath-taking performance.Electric vehicle technology has come on leaps and bounds. With technologies like our e-GMP platform, EVs can go long distances and charge in a matter of minutes thanks to a fast-expanding and easy-to-access network of public charging stations",
+    "price": 50000,
+    "thumbnail": "https://www.kia.com/content/dam/kwcms/kme/uk/en/assets/eco_refresh/infographics/images/cars/which-car-ev6.png",
+    "code": "002",
+    "stock": "10",
+    "id": 2
+  },
+  {
+    "title": "Kia Sportage",
+    "description": "Low on emissions and big on choice. Four different powertrains options; Hybrid, Plug-in Hybrid, mild hybrid and petrol. Choose a sportage to meet the needs of your journey.",
+    "price": 45000,
+    "thumbnail": "https://www.kia.com/content/dam/kwcms/kme/global/en/assets/vehicles/kia-sportage-nq5-my22/discover/kia-sportage-ice-gls-my22-elp-gallery.jpg",
+    "code": "003",
+    "stock": "5",
+    "id": 3
+  },
+  {
+    "title": "Kia New Niro",
+    "description": "Sleek yet striking. The all-new Kia Niro’s exterior has ‘future’ written all over it — with a stylish front bonnet framed around a signature matte/gloss two-tone tiger nose grille. This upfront design confidence is built on a powerful lower cladding, for an extra-wide look that accommodates an integrated central charging point.",
+    "price": 43040,
+    "thumbnail": "https://www.kia.com/content/dam/kwcms/kme/global/en/assets/vehicles/niro-sg2/discover/kia-niro-hev-my23-exterior-a-bold-future-ahead.jpg",
+    "code": "004",
+    "stock": "50",
+    "id": 4
+  },
+  {
+    "title": "Kia EV6 GT",
+    "description": "The Kia EV6 GT’s sport-infused design and wide assertive presence give it an undeniable boldness on the road. From the eye-catching front bonnet with dedicated GT grill and bumper to the strong contoured body — this electric crossover is far from shy.",
+    "price": 62645,
+    "thumbnail": "https://www.kia.com/content/dam/kwcms/kme/uk/en/assets/360vr/ev6-gt_2022/kia-ev6-gt_2022-gt-white-pearl_0000.png",
+    "code": "005",
+    "stock": "5",
+    "id": 5
+  },
+  {
+    "title": "Kia Picanto",
+    "description": "Front, rear and side, the Kia Picanto GT-Line celebrates its stylish, sporty appeal from every angle. Get even more sporty design details statement, with the newly updated Picanto GT-Line.",
+    "price": 13415,
+    "thumbnail": "https://www.kia.com/content/dam/kwcms/kme/uk/en/assets/vehicles/picanto/kia-picanto-1920x1100.jpg",
+    "code": "006",
+    "stock": "10",
+    "id": 6
+  },
+  {
+    "title": "Kia EV 9",
+    "description": "The Kia EV9 exudes a sense of serene contemporary calmness befitting a sophisticated EV for a new age of sustainable mobility. Yet, it also portrays the confident surety of a bold SUV poised to conquer all conditions.",
+    "price": "TBC",
+    "thumbnail": "https://i.dailymail.co.uk/1s/2023/01/20/17/66797443-0-image-a-7_1674237495623.jpg",
+    "code": "007",
+    "stock": "",
+    "id": 7
+  },
+  {
+    "title": "Kia Ceed",
+    "description": "The Kia Ceed sports new front styling incorporating a unique signature tiger nose grille with a floating wing themed lower garnish. With details like the horizontal air blade garnishes, and newly designed triangular air curtain side garnishes to complement the sportier stance of the new front bumper",
+    "price": 22565,
+    "thumbnail": "https://www.kia.com/content/dam/kwcms/kme/uk/en/assets/static/nav22/Explore_range/Ceed_Range_512x288.png",
+    "code": "008",
+    "stock": "33",
+    "id": 8
+  },
+  {
+    "title": "Kia Stonic",
+    "description": "Created for drivers who live every moment, push every boundary and relish every adventure, the Kia Stonic brings fresh excitement and a free spirit to the urban Crossover experience. With its sleek muscular body, sporty compact styling, exceptional handling and outstanding performance – the Kia Stonic is for those who always demand more from life.",
+    "price": 20370,
+    "thumbnail": "https://www.kia.com/content/dam/kwcms/kme/uk/en/assets/static/nav22/Explore_range/Stonic_Range_512x288.png",
+    "code": "009",
+    "stock": "25",
+    "id": 9
+  },
+  {
+    "title": "Kia ",
+    "description": "No more searching for petrol stations, no more oil changes, no more loud, vibrating engines and absolutely no emissions. Instead, the All-New Kia Soul EV gives you long-range driving with easy charging and instant acceleration in a modern atmosphere where the only thing loud is your music.",
+    "price": 32845,
+    "thumbnail": "https://www.kia.com/content/dam/kwcms/kme/uk/en/assets/vehicles/all-new-soul-ev/MY23_Soul_EV/512x288_left.png",
+    "code": "010",
+    "stock": "40",
+    "id": 10
+  }
+]
