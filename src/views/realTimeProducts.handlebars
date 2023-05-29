@@ -1,0 +1,33 @@
+<h1>Productos en la base de datos</h1>
+
+<table class="table">
+  <thead>
+    <tr>
+      <th scope="col">Title</th>
+      <th scope="col">Description</th>
+      <th scope="col">Price</th>
+      <th scope="col">Thumbnail</th>
+      <th scope="col">Code</th>
+      <th scope="col">Stock</th>
+      <th scope="col">ID</th>
+    </tr>
+  </thead>
+  <tbody id="productList">
+    {{#each products}}
+      <tr>
+        <th scope="row">
+          <td>{{this.title}}</td>
+          <td class="truncate">{{this.description}}</td>
+          <td>${{this.price}}</td>
+          <td><img class="thumbnail-img" src="{{this.thumbnail}}" alt="Image not found" /></td>
+          <td>{{this.code}}</td>
+          <td>{{this.stock}}</td>
+          <td>{{this.id}}</td>
+        </th>
+      </tr>
+    {{/each}}
+  </tbody>
+</table>
+
+<script src="/socket.io/socket.io.js"></script>
+<script src="/js/realTimeProducts.js"></script>

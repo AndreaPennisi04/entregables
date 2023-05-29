@@ -1,15 +1,12 @@
 import express from "express";
-import ProductManager from "./ProductManager.js";
 
 const productRouter = express.Router();
-
-const pm = new ProductManager("./files/products.json");
 
 // Get products
 productRouter.get("/", async (req, res) => {
   try {
     const { limit } = req.query;
-    const products = await pm.getProducts(limit);
+    const products = await req.productManager.getProducts(limit);
     res.status(200);
     res.send(products);
     return;
@@ -23,7 +20,7 @@ productRouter.get("/", async (req, res) => {
 //Get product by ID
 productRouter.get("/:pid", async (req, res) => {
   const productId = req.params.pid;
-  const product = await pm.getProductById(productId);
+  const product = await req.productManager.getProductById(productId);
   if (!product) {
     res.status(404).json({ error: "Product doesn't exist" });
     return;
@@ -34,13 +31,18 @@ productRouter.get("/:pid", async (req, res) => {
 
 //Post
 productRouter.post("/", async (req, res) => {
-  const { body } = req;
-  const newProduct = await pm.addProduct(body);
+  const { body, io } = req;
+  const newProduct = await req.productManager.addProduct(body);
   if (newProduct === false) {
     res.status(400);
     res.json({ error: "Something went wrong" });
     return;
   }
+
+  const products = await req.productManager.getProducts();
+  io.emit("newProductsList", products);
+  io.emit("newProductMessage", "New product arrived!!");
+
   res.status(200).json(newProduct);
 });
 
@@ -49,7 +51,14 @@ productRouter.put("/products/:pid", async (req, res) => {
   try {
     const productId = req.params.pid;
     const { title, description, price, thumbnail, code, stock } = req.body;
-    const updatedProduct = await pm.updateProduct(productId, { title, description, price, thumbnail, code, stock });
+    const updatedProduct = await req.productManager.updateProduct(productId, {
+      title,
+      description,
+      price,
+      thumbnail,
+      code,
+      stock,
+    });
     if (!updatedProduct) {
       res.status(404).json({ error: "Product couldn't be updated" });
     } else {
@@ -65,7 +74,7 @@ productRouter.put("/products/:pid", async (req, res) => {
 productRouter.delete("/:pid", async (req, res) => {
   try {
     const productId = req.params.pid;
-    const deletedProduct = await pm.removeProduct(productId);
+    const deletedProduct = await req.productManager.removeProduct(productId);
     if (!deletedProduct) {
       res.status(404).json({ error: "Could not delete the product" });
       return;

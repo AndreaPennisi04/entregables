@@ -26,7 +26,7 @@ export default class ProductManager {
     }
 
     if (currentProducts.some((p) => p.code === product.code)) {
-      console.log(`A product with the code: ${code} already exists`);
+      console.log(`A product with the code: ${product.code} already exists`);
       return false;
     }
 
