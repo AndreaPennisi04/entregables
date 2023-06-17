@@ -5,18 +5,26 @@
   "type": "module",
   "main": "app.js",
   "scripts": {
-    "start": "nodemon ./src/app.js",
+    "start:dev": "cross-env NODE_ENV=development nodemon ./src/index.js",
+    "start:prod": "cross-env NODE_ENV=production nodemon ./src/index.js",
+    "start:test": "cross-env NODE_ENV=test nodemon ./src/index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "Andrea Pennisi",
   "license": "ISC",
   "dependencies": {
     "bootstrap": "^5.3.0-alpha3",
+    "cors": "^2.8.5",
+    "cross-env": "^7.0.3",
+    "dotenv": "^16.3.0",
     "express": "^4.18.2",
     "express-handlebars": "^7.0.7",
+    "express-routemap": "^1.6.0",
     "handlebars": "^4.7.7",
+    "mongoose": "^7.3.0",
     "multer": "^1.4.5-lts.1",
     "nodemon": "^2.0.22",
-    "socket.io": "^4.6.1"
+    "socket.io": "^4.6.1",
+    "websockets": "^0.2.0"
   }
 }
