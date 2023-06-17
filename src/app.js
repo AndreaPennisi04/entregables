@@ -17,17 +17,15 @@ const io = new Server(server);
 const messages = [];
 
 io.on("connection", (socket) => {
-  alert("New user connected");
-});
-
-io.on("message", (data) => {
-  messages.push(data);
-  io.emit("messageLogs", messages);
-});
-
-socket.on("autenticated", (data) => {
-  socket.emit("messageLogs", messages);
-  socket.broadcast.emit("newUserConnected", data);
+  socket.on("authenticated", (username) => {
+    socket.broadcast.emit("newUserConnected", username);
+    messages.push({ user: "Server", content: `${username} connected` });
+    io.emit("messageLogs", messages);
+  });
+  socket.on("message", (message) => {
+    messages.push(message);
+    io.emit("messageLogs", messages);
+  });
 });
 
 // Make io accessible to our router
