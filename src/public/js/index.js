@@ -83,4 +83,6 @@ messageText.addEventListener("keypress", (evt) => {
   }
 });
 
-showChatLoginForm();
+if (!user) {
+  showChatLoginForm();
+}

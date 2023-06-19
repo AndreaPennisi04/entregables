@@ -1,9 +1,9 @@
-const App = require("./app");
-const BaseRoute = require("./routes/base.routes.js");
-const CartRoute = require("./routes/cart.routes.js");
-const ProducttRoute = require("./routes/product.routes.js");
-const viewsRouter = require("./routes/views.routes.js");
+import "./config/loadEnv.js";
+import App from "./app.js";
+import CartRouter from "./routes/cart.routes.js";
+import ProductRouter from "./routes/product.routes.js";
+import ViewsRouter from "./routes/views.routes.js";
 
-const app = new App([new BaseRoute(), new CartRoute(), new ProducttRoute(), new viewsRouter()]);
+const app = new App([new CartRouter(), new ProductRouter(), new ViewsRouter()]);
 
 app.listen();

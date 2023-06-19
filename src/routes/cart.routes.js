@@ -1,55 +1,64 @@
-import express from "express";
-import CartManager from "../CartManager.js";
+import { Router } from "express";
+import CartManagerDao from "../dao/managers/cartManager.managers.js";
 
-const cartRouter = express.Router();
-const cm = new CartManager("./files/carts.json", "./files/products.json");
+export default class CartRouter {
+  path = "/cart";
+  router = Router();
+  cartManager = new CartManagerDao();
 
-cartRouter.get("/", async (req, res) => {
-  const cartItems = await cm.getCart();
-  if (!cartItems) {
-    res.status(404).json({ error: "there was an issue" });
-    return;
-  } else {
-    res.json(cartItems);
+  constructor() {
+    this.initCartRoutes();
   }
-});
 
-cartRouter.get("/:cid", async (req, res) => {
-  const cartId = req.params.cid;
-  const cartItems = await cm.getCartById(cartId);
+  initCartRoutes() {
+    //Get cart
+    this.router.get(`${this.path}`, async (req, res) => {
+      try {
+        const { limit } = req.query;
+        const cart = await this.cartManager.getProducts(limit);
+        res.status(200);
+        res.send(cart);
+      } catch (error) {
+        res.status(500);
+        res.send(error);
+      }
+      return;
+    });
 
-  if (!cartItems) {
-    res.status(404).json({ error: "Product doesn't exist" });
-    return;
-  } else {
-    res.json(cartItems);
+    //Get cart by ID
+    this.router.get(`${this.path}/:cid`, async (req, res) => {
+      const cartId = req.params.cid;
+      const cartItems = await this.cartManager.getCartById(cartId);
+      if (!cartItems) {
+        res.status(404).json({ error: "Cart doesn't exist" });
+        return;
+      } else {
+        res.json(cartItems);
+      }
+    });
+
+    //Post to create a new cart
+    this.router.post(`${this.path}`, async (req, res) => {
+      const { io } = req;
+      const newCart = await this.cartManager.createCart();
+
+      io.emit("newCartList", newCart);
+      io.emit("newCartMessage", "New cart!!");
+
+      res.status(200).json(newCart);
+    });
+
+    //Post to add a product to the cart
+    this.router.post(`${this.path}/:cid/product/:pid`, async (req, res) => {
+      const cartId = req.params.cid;
+      const productId = req.params.pid;
+      const currentCart = await this.cartManager.addProductToCart(cartId, productId);
+      if (!currentCart) {
+        res.status(400);
+        res.json({ error: "Something went wrong" });
+        return;
+      }
+      res.status(200).json(currentCart);
+    });
   }
-});
-
-//Post to create a new cart
-cartRouter.post("/", async (req, res) => {
-  const { body } = req;
-  const newCartItem = await cm.addCartItem(body);
-  if (newCartItem === false) {
-    res.status(400);
-    res.json({ error: "Something went wrong" });
-    return;
-  }
-  res.status(200).json(newCartItem);
-});
-
-//Post to add a product to the cart
-cartRouter.post("/:cid/product/:pid", async (req, res) => {
-  const cartId = req.params.cid;
-  const productId = req.params.pid;
-
-  const result = await cm.addProductToCart(cartId, productId);
-  if (!result) {
-    res.status(404);
-    res.json({ error: "Something went wrong" });
-    return;
-  }
-  res.status(200).json(result);
-});
-
-export default cartRouter;
+}
