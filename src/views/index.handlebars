@@ -1,63 +1,51 @@
-<div class="container">
-  <h1>Product Form</h1>
-  <form onsubmit="saveForm(); return false;">
-    <div class="form-group">
-      <label for="title">Title:</label>
-      <input type="text" id="title" class="form-control" />
-    </div>
-    <div class="form-group">
-      <label for="description">Description:</label>
-      <textarea id="description" class="form-control"></textarea>
-    </div>
-
-    <div class="form-group">
-      <label for="thumbnailUrl">Thumbnail URL:</label>
-      <input type="text" id="thumbnailUrl" class="form-control" />
-    </div>
-
-    <div class="form-group">
-      <label for="price">Price:</label>
-      <input type="number" id="price" step="0.01" class="form-control w-25" />
-    </div>
-
-    <div class="form-group">
-      <label for="code">Code:</label>
-      <input type="text" id="code" class="form-control w-25" />
-    </div>
-    <div class="form-group">
-      <label for="stock">Stock:</label>
-      <input type="number" id="stock" class="form-control w-25" />
-    </div>
-    <input type="submit" value="Save" class="btn btn-outline-success" />
-  </form>
-</div>
-
-<div class="container mb-10 px-4 float-left">
-  <button type="button" class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#exampleModal">Open virtual chat</button>
-</div>
-<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h1 class="modal-title fs-5" id="exampleModalLabel">Online group chat</h1>
-        <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-      <div class="modal-body">
-        <form>
-          <div class="mb-3">
-            <div id="messages-log" style="height: 200px; overflow-y: scroll; border: 1px solid #ccc; padding: 10px;">
-            </div>
+<div class="container" style="margin: 20px;">
+  <div class="row">
+    <div class="col-md-6">
+      <div class="rounded-box">
+        <h3>Add product</h3>
+        <form onsubmit="saveForm(); return false;">
+          <div class="form-group">
+            <label for="title">Title:</label>
+            <input type="text" id="title" class="form-control" />
           </div>
-          <div class="mb-3">
-            <label for="message-text" class="col-form-label">Message:</label>
-            <input class="form-control" id="message-text" />
+          <div class="form-group">
+            <label for="description">Description:</label>
+            <textarea id="description" class="form-control"></textarea>
           </div>
+
+          <div class="form-group">
+            <label for="thumbnailUrl">Thumbnail URL:</label>
+            <input type="text" id="thumbnailUrl" class="form-control" />
+          </div>
+
+          <div class="form-group">
+            <label for="price">Price:</label>
+            <input type="number" id="price" step="0.01" class="form-control w-25" />
+          </div>
+
+          <div class="form-group">
+            <label for="code">Code:</label>
+            <input type="text" id="code" class="form-control w-25" />
+          </div>
+          <div class="form-group">
+            <label for="stock">Stock:</label>
+            <input type="number" id="stock" class="form-control w-25" />
+          </div>
+          <input type="submit" value="Save" class="btn btn-outline-success" />
         </form>
       </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Submit</button>
+    </div>
+    <div class="col-md-6">
+      <div style="border-radius: 10px; border: 1px solid #ccc; padding: 15px;">
+        <h3>Chat</h3>
+        <div class="mb-3">
+          <div id="messages-log" style="height: 200px; overflow-y: scroll; border: 1px solid #ccc; padding: 10px;">
+          </div>
+        </div>
+        <div class="mb-3">
+          <label for="message-text" class="col-form-label">Message:</label>
+          <input class="form-control" id="message-text" />
+        </div>
       </div>
     </div>
   </div>

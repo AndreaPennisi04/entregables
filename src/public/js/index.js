@@ -17,7 +17,7 @@ const saveForm = async () => {
 
   const rawStr = JSON.stringify(data);
 
-  await fetch("http://localhost:8080/api/product", {
+  await fetch("http://localhost:8080/api/v1/product", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: rawStr,
@@ -37,7 +37,13 @@ const showChatLoginForm = async () => {
     inputAttributes: {
       autocapitalize: "off",
     },
-    showCancelButton: true,
+    preConfirm: (username) => {
+      console.log("🚀 ~ file: index.js:50 ~ showChatLoginForm ~ username:", username);
+      if (!username) {
+        Swal.showValidationMessage(`You need to provide a username`);
+      }
+    },
+    showCancelButton: false,
     confirmButtonText: "Confirm",
     allowOutsideClick: false,
     allowEscapeKey: false,

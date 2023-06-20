@@ -85,7 +85,6 @@ export default class App {
       console.log(`=================================`);
       console.log(`======= COURSE: ${CURSO} ======`);
       console.log(`======= ENV: ${this.env} =======`);
-      console.log(`🚀 App listening on port ${this.port}`);
       console.log(`=================================`);
     });
 

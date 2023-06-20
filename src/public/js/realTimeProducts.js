@@ -12,7 +12,7 @@ socket.on("newProductsList", (products) => {
           <td><img class="thumbnail-img" src="${product.thumbnail}" alt="Thumbnail"></td>
           <td>${product.code}</td>
           <td>${product.stock}</td>
-          <td>${product.id}</td>
+          <td>${product._id}</td>
         `;
     productList.appendChild(row);
   }
