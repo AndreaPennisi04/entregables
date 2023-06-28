@@ -1,22 +1,21 @@
 import { cartModel } from "../models/cartManager.models.js";
-import ProductManagerDao from "./productManager.managers.js";
 
 export default class CartManagerDao {
   async createCart() {
     try {
-      const newCartItem = await cartModel.create({ products: [] });
+      const newCartItem = await cartModel.create({});
       return newCartItem;
-    } catch (error) {
-      console.log("🚀 ~ file: cartManager.managers.js:8 ~ CartManagerDao ~ error:", error);
+    } catch ({ message }) {
+      throw new Error(`Creating cart failed, message: ${message}`);
     }
   }
 
-  getCart = async (limit = "20") => {
+  getCart = async () => {
     try {
-      const carts = await cartModel.find({}).limit(parseInt(limit));
+      const carts = await cartModel.find({}).populate("products.product");
       return carts;
-    } catch (error) {
-      console.log("🚀 ~ file: cartManager.managers.js:19 ~ CartManagerDao ~ getCart= ~ error:", error);
+    } catch ({ message }) {
+      throw new Error(`Get cart failed, message: ${message}`);
     }
   };
 
@@ -24,10 +23,73 @@ export default class CartManagerDao {
     try {
       const cart = await cartModel.findOne({ _id: id });
       return cart;
-    } catch (error) {
-      console.log("🚀 ~ file: cartManager.managers.js:28 ~ CartManagerDao ~ getCartById= ~ error:", error);
+    } catch ({ message }) {
+      throw new Error(`Get cart by id failed, message: ${message}`);
     }
   };
+
+  // Delete product from cart
+
+  async deleteProduct(cartId, productId) {
+    if (!cartId || !productId) {
+      throw new Error("Need productId and cartId");
+    }
+
+    try {
+      const result = await cartModel.updateOne({ _id: cartId }, { $pull: { products: { product: productId } } });
+      if (result.modifiedCount === 0) {
+        throw new Error("Product was not in the cart");
+      }
+
+      return result;
+    } catch ({ message }) {
+      throw new Error(`Delete product from cart failed, message: ${message}`);
+    }
+  }
+
+  // Add multiple products to cart
+  async addMultipleProductsToCart(cartId, products) {
+    if (!products || !products.push) {
+      throw new Error("Product field is required and should be an array of product Ids");
+    }
+
+    try {
+      for (const product of products) {
+        await this.addProductToCart(cartId, product);
+      }
+    } catch ({ message }) {
+      throw new Error(`Add product to cart failed, message: ${message}`);
+    }
+  }
+
+  // deletes all products from the cart
+  async deleteAllproducts(cartId) {
+    if (!products || !products.push) {
+      throw new Error("Product field is required and should be an array of product Ids");
+    }
+
+    const result = await cartModel.updateOne({ _id: cartId }, { products: [] });
+    if (result.modifiedCount === 0) {
+      throw new Error("Could not find the cart");
+    }
+  }
+
+  // Add multiple products to cart
+  async setProductQuantity(cartId, productId, quantityRaw) {
+    const quantity = parseInt(quantityRaw);
+    if (!quantity && isNaN(quantity)) {
+      throw new Error("Quantity is required and needs to be a valid integer");
+    }
+
+    const result = await cartModel.updateOne(
+      { _id: cartId },
+      { $set: { "products.$[product].quantity": quantity } },
+      { arrayFilters: [{ "product.product": productId }] }
+    );
+    if (result.modifiedCount === 0) {
+      throw new Error("No update was made");
+    }
+  }
 
   // Add product to cart
   async addProductToCart(cartId, productId) {
@@ -36,37 +98,21 @@ export default class CartManagerDao {
       return false;
     }
 
-    const pm = new ProductManagerDao();
-
-    const product = await pm.getProductById(productId);
-    if (!product) {
-      console.error("The product you are trying to update does not exist");
-      return false;
-    }
-
-    const currentCart = await this.getCartById(cartId);
-    console.log(
-      "🚀 ~ file: cartManager.managers.js:48 ~ CartManagerDao ~ addProductToCart ~ currentCart:",
-      currentCart
-    );
-
-    const indexOfProductInCart = currentCart.products.findIndex((p) => p.productId === productId);
-
-    if (indexOfProductInCart < 0) {
-      currentCart.products.push({
-        productId: productId,
-        quantity: 1,
-      });
-    } else {
-      currentCart.products[indexOfProductInCart].quantity = currentCart.products[indexOfProductInCart].quantity + 1;
-    }
-
     try {
-      await cartModel.updateOne({ _id: cartId }, currentCart);
-    } catch (error) {
-      console.log("🚀 ~ file: cartManager.managers.js:63 ~ CartManagerDao ~ addProductToCart ~ error:", error);
-    }
+      let result = await cartModel.updateOne(
+        { _id: cartId, "products.product": productId },
+        { $inc: { "products.$.quantity": 1 } }
+      );
+      if (result.modifiedCount === 0) {
+        result = await cartModel.updateOne({ _id: cartId }, { $push: { products: { product: productId } } });
+      }
+      if (result.modifiedCount === 0) {
+        throw new Error("Could not update the cart");
+      }
 
-    return currentCart;
+      return;
+    } catch ({ message }) {
+      throw new Error(`Add product to cart failed, message: ${message}`);
+    }
   }
 }
