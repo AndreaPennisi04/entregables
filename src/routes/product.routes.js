@@ -17,13 +17,25 @@ export default class ProductRouter {
         const { limit, page, sort, query } = req.query;
         const products = await this.productManager.getAllProducts(limit, page, sort, query);
         res.status(200);
-        res.send(products);
+        res.send({
+          ...products,
+          prevLink:
+            products.prevPage &&
+            `${req.protocol}://${req.get("host")}${req.baseUrl}/product?sort=${sort || ""}&limit=${limit || ""}&query=${
+              query || ""
+            }&page=${products.prevPage}`,
+          nextLink:
+            products.nextPage &&
+            `${req.protocol}://${req.get("host")}${req.baseUrl}/product?sort=${sort || ""}&limit=${limit || ""}&query=${
+              query || ""
+            }&page=${products.nextPage}`,
+          status: "success",
+        });
         return;
-      } catch (error) {
-        res.status(500);
-        res.send(error);
+      } catch ({ message }) {
+        res.status(500).send({ status: "error", payload: message });
+        return;
       }
-      return;
     });
 
     //Get product by ID
