@@ -1,10 +1,14 @@
 import { productModel } from "../models/productManager.models.js";
 
 export default class ProductManagerDao {
-  getAllProducts = async (limit = 20) => {
+  getAllProducts = async (limit = 10, page = 1, sort, query) => {
     try {
-      const allProducts = await productModel.find({}).limit(limit);
-      return allProducts;
+      const products = await productModel.paginate(JSON.parse(query) || {}, {
+        limit,
+        page,
+        sort: sort && { price: sort },
+      });
+      return products;
     } catch (error) {
       console.log("🚀 ~ file: productManager.managers.js:8 ~ ProductManagerDao ~ getAllProducts= ~ error:", error);
     }

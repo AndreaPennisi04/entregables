@@ -14,8 +14,8 @@ export default class ProductRouter {
     // Get products
     this.router.get(`${this.path}`, async (req, res) => {
       try {
-        const { limit } = req.query;
-        const products = await this.productManager.getAllProducts(limit);
+        const { limit, page, sort, query } = req.query;
+        const products = await this.productManager.getAllProducts(limit, page, sort, query);
         res.status(200);
         res.send(products);
         return;
