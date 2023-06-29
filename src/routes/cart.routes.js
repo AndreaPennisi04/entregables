@@ -15,8 +15,7 @@ export default class CartRouter {
     this.router.get(`${this.path}`, async (req, res) => {
       try {
         const cart = await this.cartManager.getCart();
-        res.status(200);
-        res.send(cart);
+        res.status(200).send({ status: "success", payload: cart });
       } catch ({ message }) {
         res.status(500).send({ status: "error", payload: message });
       }
@@ -28,12 +27,7 @@ export default class CartRouter {
       try {
         const cartId = req.params.cid;
         const cartItems = await this.cartManager.getCartById(cartId);
-        if (!cartItems) {
-          res.status(404).json({ error: "Cart doesn't exist" });
-          return;
-        } else {
-          res.json(cartItems);
-        }
+        res.status(200).send({ status: "success", payload: cartItems });
       } catch ({ message }) {
         res.status(500).send({ status: "error", payload: message });
       }
@@ -48,7 +42,7 @@ export default class CartRouter {
         io.emit("newCartList", newCart);
         io.emit("newCartMessage", "New cart!!");
 
-        res.status(200).json(newCart);
+        res.status(200).send({ status: "success", payload: newCart });
       } catch ({ message }) {
         res.status(500).send({ status: "error", payload: message });
       }
@@ -59,8 +53,8 @@ export default class CartRouter {
       try {
         const cartId = req.params.cid;
         const productId = req.params.pid;
-        await this.cartManager.addProductToCart(cartId, productId);
-        res.status(200).json();
+        const cart = await this.cartManager.addProductToCart(cartId, productId);
+        res.status(200).send({ status: "success", payload: cart });
       } catch ({ message }) {
         res.status(500).send({ status: "error", payload: message });
       }
@@ -72,9 +66,9 @@ export default class CartRouter {
         const cartId = req.params.cid;
         const products = req.body.products;
 
-        const currentCart = await this.cartManager.addMultipleProductsToCart(cartId, products);
+        const cart = await this.cartManager.addMultipleProductsToCart(cartId, products);
 
-        res.status(200).json(currentCart);
+        res.status(200).send({ status: "success", payload: cart });
       } catch ({ message }) {
         res.status(500).send({ status: "error", payload: message });
       }
@@ -86,8 +80,8 @@ export default class CartRouter {
         const cartId = req.params.cid;
         const productId = req.params.pid;
         const quantity = req.body.quantity;
-        await this.cartManager.setProductQuantity(cartId, productId, quantity);
-        res.status(200).json();
+        const cart = await this.cartManager.setProductQuantity(cartId, productId, quantity);
+        res.status(200).send({ status: "success", payload: cart });
       } catch ({ message }) {
         res.status(500).send({ status: "error", payload: message });
       }
@@ -98,8 +92,8 @@ export default class CartRouter {
       try {
         const cartId = req.params.cid;
         const productId = req.params.pid;
-        const result = await this.cartManager.deleteProduct(cartId, productId);
-        res.status(204).send(result);
+        const cart = await this.cartManager.deleteProduct(cartId, productId);
+        res.status(200).send({ status: "success", payload: cart });
       } catch ({ message }) {
         res.status(500).send({ status: "error", payload: message });
       }
@@ -109,8 +103,8 @@ export default class CartRouter {
     this.router.delete(`${this.path}/:cid`, async (req, res) => {
       try {
         const cartId = req.params.cid;
-        const result = await this.cartManager.deleteAllProducts(cartId);
-        res.status(204).send(result);
+        const cart = await this.cartManager.deleteAllProducts(cartId);
+        res.status(200).send({ status: "success", payload: cart });
       } catch ({ message }) {
         res.status(500).send({ status: "error", payload: message });
       }

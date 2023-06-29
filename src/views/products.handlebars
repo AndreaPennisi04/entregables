@@ -1,0 +1,56 @@
+<h1>Productos en la base de datos</h1>
+
+<table class="table">
+  <thead>
+    <tr>
+      <th scope="col">Title</th>
+      <th scope="col">Description</th>
+      <th scope="col">Price</th>
+      <th scope="col">Thumbnail</th>
+      <th scope="col">Code</th>
+      <th scope="col">Stock</th>
+      <th scope="col">Actions</th>
+    </tr>
+  </thead>
+  <tbody id="productList">
+    {{#each data.payload}}
+      <tr>
+        <td>{{this.title}}</td>
+        <td class="truncate">{{this.description}}</td>
+        <td>${{this.price}}</td>
+        <td><img class="thumbnail-img" src="{{this.thumbnail}}" alt="image" /></td>
+        <td>{{this.code}}</td>
+        <td>{{this.stock}}</td>
+        <td><button class="btn btn-primary btn-sm" id="add-to-cart" onclick="addToCart('{{this._id}}')">Add to cart</button></td>
+      </tr>
+    {{/each}}
+  </tbody>
+</table>
+<div class="paginator">
+  <span class="page-info">
+    Page
+    <span id="currentPage">{{data.page}}</span>
+    of
+    <span id="totalPages">{{data.totalPages}}</span>
+  </span>
+  <button
+    id="prevPageBtn"
+    class="btn btn-sm btn-outline-primary"
+    {{#unless data.prevLink}}
+    disabled
+    {{/unless}}
+    onclick="window.location.href = '{{data.prevLink}}'"
+  >&lt; Prev</button>
+  <button
+    id="nextPageBtn"
+    class="btn btn-sm btn-outline-primary"
+    {{#unless data.nextLink}}
+    disabled
+    {{/unless}}
+    onclick="window.location.href = '{{data.nextLink}}'"
+  >Next &gt;</button>
+</div>
+
+<button class="btn btn-secondary m-4" onclick="window.location.href = '/api/v1/views/cart'">Open cart</button>
+
+<script src="/js/products.js"></script>

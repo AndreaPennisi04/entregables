@@ -15,20 +15,10 @@ export default class ProductRouter {
     this.router.get(`${this.path}`, async (req, res) => {
       try {
         const { limit, page, sort, query } = req.query;
-        const products = await this.productManager.getAllProducts(limit, page, sort, query);
+        const products = await this.productManager.getAllProducts(limit, page, sort, query, req.baseUrl);
         res.status(200);
         res.send({
           ...products,
-          prevLink:
-            products.prevPage &&
-            `${req.protocol}://${req.get("host")}${req.baseUrl}/product?sort=${sort || ""}&limit=${limit || ""}&query=${
-              query || ""
-            }&page=${products.prevPage}`,
-          nextLink:
-            products.nextPage &&
-            `${req.protocol}://${req.get("host")}${req.baseUrl}/product?sort=${sort || ""}&limit=${limit || ""}&query=${
-              query || ""
-            }&page=${products.nextPage}`,
           status: "success",
         });
         return;

@@ -21,7 +21,7 @@ export default class CartManagerDao {
 
   getCartById = async (id) => {
     try {
-      const cart = await cartModel.findOne({ _id: id });
+      const cart = await cartModel.findOne({ _id: id }).populate("products.product");
       return cart;
     } catch ({ message }) {
       throw new Error(`Get cart by id failed, message: ${message}`);
@@ -41,7 +41,9 @@ export default class CartManagerDao {
         throw new Error("Product was not in the cart");
       }
 
-      return result;
+      const cart = this.getCartById(cartId);
+
+      return cart;
     } catch ({ message }) {
       throw new Error(`Delete product from cart failed, message: ${message}`);
     }
@@ -57,21 +59,21 @@ export default class CartManagerDao {
       for (const product of products) {
         await this.addProductToCart(cartId, product);
       }
+      const cart = this.getCartById(cartId);
+      return cart;
     } catch ({ message }) {
       throw new Error(`Add product to cart failed, message: ${message}`);
     }
   }
 
   // deletes all products from the cart
-  async deleteAllproducts(cartId) {
-    if (!products || !products.push) {
-      throw new Error("Product field is required and should be an array of product Ids");
-    }
-
+  async deleteAllProducts(cartId) {
     const result = await cartModel.updateOne({ _id: cartId }, { products: [] });
     if (result.modifiedCount === 0) {
       throw new Error("Could not find the cart");
     }
+
+    return await this.getCartById(cartId);
   }
 
   // Add multiple products to cart
@@ -89,6 +91,7 @@ export default class CartManagerDao {
     if (result.modifiedCount === 0) {
       throw new Error("No update was made");
     }
+    return await this.getCartById(cartId);
   }
 
   // Add product to cart
@@ -110,7 +113,8 @@ export default class CartManagerDao {
         throw new Error("Could not update the cart");
       }
 
-      return;
+      const cart = this.getCartById(cartId);
+      return cart;
     } catch ({ message }) {
       throw new Error(`Add product to cart failed, message: ${message}`);
     }

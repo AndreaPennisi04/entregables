@@ -22,6 +22,16 @@ export default class ViewsRouter {
       res.render("home", { products, style: "home.css" });
     });
 
+    this.router.get(`${this.path}/products/:pn`, async (req, res) => {
+      const pageNumber = req.params.pn;
+      const data = await this.productManager.getAllProducts(undefined, pageNumber, undefined, undefined, req.baseUrl);
+      res.render("products", { data, style: "products.css" });
+    });
+
+    this.router.get(`${this.path}/cart`, async (req, res) => {
+      res.render("cart", { style: "products.css" });
+    });
+
     this.router.get(`${this.path}/realtimeproducts`, async (req, res) => {
       const products = await this.productManager.getAllProducts();
       res.render("realTimeProducts", { products, style: "home.css" });

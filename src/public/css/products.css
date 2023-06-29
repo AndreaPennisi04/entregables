@@ -1,0 +1,58 @@
+table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+
+  th, td {
+    padding: 8px;
+    text-align: left;
+    border-bottom: 1px solid #2d2d2d;
+  }
+
+  .thumbnail-cell {
+    width: 100px;
+  }
+
+  .thumbnail-img {
+    width: 100px;
+    aspect-ratio: 5/3;
+    object-fit: cover;
+  }
+
+  .truncate {
+    width: 200px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 200px;
+  }
+
+
+  .paginator {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 10px;
+    font-size: 14px;
+  }
+  
+  .page-info {
+    margin-right: 10px;
+  }
+  
+  .page-btn {
+    padding: 5px 10px;
+    border: none;
+    background-color: #f0f0f0;
+    color: #333;
+    cursor: pointer;
+  }
+  
+  .page-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+  
+  .items-per-page select {
+    padding: 2px;
+  }

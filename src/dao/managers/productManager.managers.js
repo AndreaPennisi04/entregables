@@ -1,7 +1,7 @@
 import { productModel } from "../models/productManager.models.js";
 
 export default class ProductManagerDao {
-  getAllProducts = async (limit = 10, page = 1, sort, query) => {
+  getAllProducts = async (limit = 10, page = 1, sort, query, baseUrl) => {
     try {
       const products = await productModel.paginate(query && JSON.parse(query), {
         limit,
@@ -9,7 +9,11 @@ export default class ProductManagerDao {
         sort: sort && { price: sort },
         customLabels: { docs: "payload" },
       });
-      return products;
+      return {
+        ...products,
+        prevLink: products.prevPage && `${baseUrl}/views/products/${products.prevPage}`,
+        nextLink: products.nextPage && `${baseUrl}/views/products/${products.nextPage}`,
+      };
     } catch (error) {
       console.error("🚀 ~ file: productManager.managers.js:8 ~ ProductManagerDao ~ getAllProducts= ~ error:", error);
       throw new Error(
