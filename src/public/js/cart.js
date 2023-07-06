@@ -1,19 +1,15 @@
 const loadCart = async () => {
-  let cartId = sessionStorage.getItem("cartId");
+  let resCart = await fetch(`/api/v1/cart`, { method: "GET" });
 
-  if (!cartId) {
-    throw new Error("No cart found");
+  let dataCart = await resCart.json();
+  if (!dataCart || dataCart.status === "error") {
+    throw new Error(`something went wrong ${dataCart.payload || ""}`);
   }
-
-  const response = await fetch(`/api/v1/cart/${cartId}`, { method: "GET" });
-  const data = await response.json();
-  if (!data || data.status === "error" || !data.payload || !data.payload._id) {
-    throw new Error(`something went wrong ${data.payload || ""}`);
-  }
+  let [cart] = dataCart.payload;
 
   const productList = document.getElementById("productList");
   productList.innerHTML = "";
-  for (const item of data.payload.products) {
+  for (const item of cart.products) {
     const row = document.createElement("tr");
     row.innerHTML = `
           <td>${item.product.title}</td>
@@ -27,4 +23,25 @@ const loadCart = async () => {
   }
 };
 
+const sayHi = async () => {
+  const session = await fetch("/api/v1/session", { method: "GET" });
+  console.log(session);
+  const user = await session.json();
+
+  Swal.fire({
+    title: `Greetings`,
+    text: `This is your cart ${user.firstName} ${user.lastName},
+    We saved for you while you were away`,
+    width: 600,
+    padding: "3em",
+    color: "#716add",
+  });
+};
+
+const handleLogout = async () => {
+  await fetch("/api/v1/session/logout", { method: "GET" });
+  window.location.replace("/api/v1/login");
+};
+
+sayHi();
 loadCart();

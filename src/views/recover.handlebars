@@ -1,23 +1,30 @@
 <div>
-  <h1>Password recovering</h1>
+  <h1>Recover password</h1>
 
   <div>
-    <form action="/api/session/recover-psw" method="post">
-      <label for="email">Email</label><br />
-      <input type="email" name="email" id="email" placeholder="introduzca su correo electronico" />
-      <br />
-      <label for="password">New password</label>
-      <br />
-      <input
-        type="password"
-        name="new_password"
-        id="new_password"
-        placeholder="introduzca su nueva contrasena"
-        required
-      />
-      <br />
-      <button type="submit">Update Password</button>
+    <form onsubmit="handleOnSubmit(); return false;">
+      <div style="width: 100%" class="mt-3">
+        <label for="email">Username</label><br />
+        <input class="form-control" name="email" id="username" placeholder="Your username" required />
+      </div>
+      <div style="width: 100%" class="mt-3">
+        <label for="password">New password</label>
+        <input
+          class="form-control"
+          type="password"
+          name="new_password"
+          id="password"
+          placeholder="Your new password"
+          required
+        />
+      </div>
+      <div class="col-md-12 mt-3">
+        <label id="message" class="text-danger"></label>
+      </div>
+      <button class="btn btn-primary" type="submit">Update Password</button>
     </form>
   </div>
 
 </div>
+
+<script src="/js/recover.js"></script>

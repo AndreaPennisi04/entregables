@@ -1,6 +1,7 @@
 import express from "express";
 import handlebars from "express-handlebars";
 import displayRoutes from "express-routemap";
+import MongoStore from "connect-mongo";
 import cors from "cors";
 import { Server } from "socket.io";
 import __dirname from "./utils.js";
@@ -8,9 +9,8 @@ import { mongoDBConnection } from "./db/mongo.config.js";
 import { getBaseConfiguration } from "./config/getBaseConfiguration.js";
 import MessagesManagerDao from "./dao/managers/messagesManager.managers.js";
 import session from "express-session";
-//import autMdw from ".middleware/auth.middleware";
 
-const { API_VERSION, CURSO, PORT, NODE_ENV } = getBaseConfiguration();
+const { API_VERSION, CURSO, PORT, NODE_ENV, SIGNING_SECRET, DB_CNN, DB_NAME } = getBaseConfiguration();
 
 export default class App {
   app;
@@ -29,7 +29,6 @@ export default class App {
     this.connectDB();
     this.initHandlebars();
     this.messagesManager = new MessagesManagerDao();
-    this.initializeSessions();
   }
 
   getServer() {
@@ -53,12 +52,13 @@ export default class App {
     this.app.use(express.static(`${__dirname}/public`));
     this.app.use(
       session({
-        store: mongoStore.create({
-          mongoUrl: MONGO_URL,
+        store: MongoStore.create({
+          mongoUrl: DB_CNN,
           mongoOptions: { useNewUrlParser: true, useUnifiedTopology: true },
-          ttl: 10,
+          ttl: 60 * 15, //15 minutos
+          dbName: DB_NAME,
         }),
-        secret: "secretSession",
+        secret: SIGNING_SECRET,
         resave: false,
         saveUninitialized: false,
       })
@@ -92,18 +92,6 @@ export default class App {
       req.io = io;
       next();
     });
-  }
-
-  //Session
-  initializeSessions() {
-    this.app.use("/api/session", sessionRoutes);
-    this.app.use("/api/private/", authMdw),
-      (req, res) => {
-        const username = req.session.user;
-        return res.json({
-          message: `route protected. You are welcome ${username}`,
-        });
-      };
   }
 
   listen() {

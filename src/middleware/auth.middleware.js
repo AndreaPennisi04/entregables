@@ -1,12 +1,9 @@
-const authMdw = (req, res, next) => {
-  console.log("session validation!!!!, 🚀 ~ file: auth.middleware.js:2 ~ authMdw ~ req:", req.session);
-  if (req.session?.user || req.session?.admin) {
+export const authMdw = (req, res, next) => {
+  if (req.session?.userId) {
     return next();
   }
 
-  return res.status(401).json({
-    message: "Unauthorized access",
-  });
+  return res.redirect(307, "/api/v1/login");
 };
 
-module.export = authMdw;
+export default authMdw;

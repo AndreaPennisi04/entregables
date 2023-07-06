@@ -1,7 +1,7 @@
 import { Router } from "express";
 import ProductManagerDao from "../dao/managers/productManager.managers.js";
 import CartManagerDao from "../dao/managers/cartManager.managers.js";
-import authMdw from "./middleware/auth.middleware";
+import authMdw from "../middleware/auth.middleware.js";
 
 export default class ViewsRouter {
   path = "/views";
@@ -29,7 +29,7 @@ export default class ViewsRouter {
       res.render("products", { data, style: "products.css" });
     });
 
-    this.router.get(`${this.path}/cart`, async (req, res) => {
+    this.router.get(`${this.path}/cart`, authMdw, async (req, res) => {
       res.render("cart", { style: "products.css" });
     });
 
@@ -39,7 +39,7 @@ export default class ViewsRouter {
     });
 
     this.router.get("/login", async (req, res) => {
-      res.render("login");
+      res.render("login", { style: "login.css" });
     });
 
     this.router.get("/register", async (req, res) => {
@@ -47,18 +47,15 @@ export default class ViewsRouter {
     });
 
     this.router.get("/recover", async (req, res) => {
-      res.render("recover");
+      res.render("recover", { style: "recover.css" });
     });
 
-    router.get("/profile", authMdw, async (req, res) => {
+    this.router.get("/profile", authMdw, async (req, res) => {
       const user = req.session.user;
-      console.log("🚀 ~ file: views.routes.js:55 ~ ViewsRouter ~ router.get ~ user:", user);
-
       res.render("profile", {
         user,
         cart: {
           cartId: "_id",
-          products: [{ productId: "1", name: name }],
         },
       });
     });

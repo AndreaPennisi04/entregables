@@ -1,4 +1,4 @@
-async function handleSubmit() {
+async function handleOnSubmit() {
   try {
     const username = document.getElementById("username");
     const password = document.getElementById("password");
@@ -8,7 +8,7 @@ async function handleSubmit() {
       password: password.value,
     };
 
-    const result = await fetch("/api/v1/session/login", {
+    const result = await fetch("/api/v1/session/recover", {
       method: "POST",
       body: JSON.stringify(data),
       headers: {
@@ -26,8 +26,4 @@ async function handleSubmit() {
   } catch (error) {
     console.error(error);
   }
-}
-
-async function handleRegister() {
-  window.location.replace("/api/v1/register");
 }

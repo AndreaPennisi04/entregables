@@ -1,18 +1,18 @@
 import { cartModel } from "../models/cartManager.models.js";
 
 export default class CartManagerDao {
-  async createCart() {
+  async createCart(userId) {
     try {
-      const newCartItem = await cartModel.create({});
+      const newCartItem = await cartModel.create({ user: userId });
       return newCartItem;
     } catch ({ message }) {
       throw new Error(`Creating cart failed, message: ${message}`);
     }
   }
 
-  getCart = async () => {
+  getCart = async (userId) => {
     try {
-      const carts = await cartModel.find({}).populate("products.product");
+      const carts = await cartModel.find({ user: userId }).populate("products.product");
       return carts;
     } catch ({ message }) {
       throw new Error(`Get cart failed, message: ${message}`);

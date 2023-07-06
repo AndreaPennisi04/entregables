@@ -5,13 +5,14 @@
   "type": "module",
   "main": "app.js",
   "scripts": {
-    "start": "cross-env NODE_ENV=dev nodemon ./src/index.js",
+    "start": "cross-env NODE_ENV=dev nodemon  --inspect=10101 --enable-source-maps ./src/index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "Andrea Pennisi",
   "license": "ISC",
   "dependencies": {
     "bootstrap": "^5.3.0-alpha3",
+    "connect-mongo": "^5.0.0",
     "cookie-parser": "^1.4.6",
     "cors": "^2.8.5",
     "cross-env": "^7.0.3",
