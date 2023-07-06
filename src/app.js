@@ -7,6 +7,8 @@ import __dirname from "./utils.js";
 import { mongoDBConnection } from "./db/mongo.config.js";
 import { getBaseConfiguration } from "./config/getBaseConfiguration.js";
 import MessagesManagerDao from "./dao/managers/messagesManager.managers.js";
+import session from "express-session";
+//import autMdw from ".middleware/auth.middleware";
 
 const { API_VERSION, CURSO, PORT, NODE_ENV } = getBaseConfiguration();
 
@@ -27,6 +29,7 @@ export default class App {
     this.connectDB();
     this.initHandlebars();
     this.messagesManager = new MessagesManagerDao();
+    this.initializeSessions();
   }
 
   getServer() {
@@ -48,6 +51,18 @@ export default class App {
     this.app.use(express.json());
     this.app.use(express.urlencoded({ extended: true }));
     this.app.use(express.static(`${__dirname}/public`));
+    this.app.use(
+      session({
+        store: mongoStore.create({
+          mongoUrl: MONGO_URL,
+          mongoOptions: { useNewUrlParser: true, useUnifiedTopology: true },
+          ttl: 10,
+        }),
+        secret: "secretSession",
+        resave: false,
+        saveUninitialized: false,
+      })
+    );
   }
 
   initializeRoutes(routes) {
@@ -79,6 +94,18 @@ export default class App {
     });
   }
 
+  //Session
+  initializeSessions() {
+    this.app.use("/api/session", sessionRoutes);
+    this.app.use("/api/private/", authMdw),
+      (req, res) => {
+        const username = req.session.user;
+        return res.json({
+          message: `route protected. You are welcome ${username}`,
+        });
+      };
+  }
+
   listen() {
     const server = this.app.listen(this.port, () => {
       displayRoutes(this.app);
@@ -104,5 +131,12 @@ export default class App {
     );
     this.app.set("views", `${__dirname}/views`);
     this.app.set("view engine", "handlebars");
+    this.app.use(
+      session({
+        secret: "coderSecret",
+        resave: true,
+        saveUninitialized: true,
+      })
+    );
   }
 }
