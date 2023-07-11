@@ -1,4 +1,4 @@
-import { cartModel } from "../models/cartManager.models.js";
+import { cartModel } from "../models/cartModel.models.js";
 
 export default class CartManagerDao {
   async createCart(userId) {

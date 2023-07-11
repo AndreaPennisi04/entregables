@@ -1,13 +1,14 @@
 import { connect } from "mongoose";
-import { getBaseConfiguration } from "../config/getBaseConfiguration.js";
+import config from "../config/config.js";
 
-const { DB_HOST, DB_PORT, DB_NAME, DB_CNN } = getBaseConfiguration();
+const { DB_CNN, DB_NAME } = config;
 
 const configConnection = {
-  url: `${DB_CNN}${DB_NAME}`,
+  url: `${DB_CNN}`,
   options: {
     useNewUrlParser: true,
     useUnifiedTopology: true,
+    dbName: DB_NAME,
   },
 };
 

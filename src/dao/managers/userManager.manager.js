@@ -1,4 +1,4 @@
-import { userModel } from "../models/userManager.models.js";
+import { userModel } from "../models/userModel.models.js";
 
 export default class UserManagerDao {
   login = async (email, password) => {

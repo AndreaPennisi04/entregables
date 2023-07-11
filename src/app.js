@@ -6,11 +6,11 @@ import cors from "cors";
 import { Server } from "socket.io";
 import __dirname from "./utils.js";
 import { mongoDBConnection } from "./db/mongo.config.js";
-import { getBaseConfiguration } from "./config/getBaseConfiguration.js";
+import config from "./config/config.js";
 import MessagesManagerDao from "./dao/managers/messagesManager.managers.js";
 import session from "express-session";
 
-const { API_VERSION, CURSO, PORT, NODE_ENV, SIGNING_SECRET, DB_CNN, DB_NAME } = getBaseConfiguration();
+const { API_VERSION, CURSO, PORT, NODE_ENV, SIGNING_SECRET, DB_CNN, DB_NAME } = config;
 
 export default class App {
   app;

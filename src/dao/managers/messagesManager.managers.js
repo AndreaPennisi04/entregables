@@ -1,4 +1,4 @@
-import { messagesModel } from "../models/messagesManager.models.js";
+import { messagesModel } from "../models/messagesModel.models.js";
 
 export default class MessagesManagerDao {
   getLastMessages = async (limit = 20) => {

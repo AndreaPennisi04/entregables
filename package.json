@@ -5,7 +5,8 @@
   "type": "module",
   "main": "app.js",
   "scripts": {
-    "start": "cross-env NODE_ENV=dev nodemon  --inspect=10101 --enable-source-maps ./src/index.js",
+    "start": "node ./src/index.js",
+    "dev": "cross-env NODE_ENV=dev nodemon  --inspect=10101 --enable-source-maps ./src/index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "Andrea Pennisi",
