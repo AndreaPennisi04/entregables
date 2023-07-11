@@ -1,11 +1,43 @@
 import passport from "passport";
 import local from "passport-local";
+import GitHubStrategy from "passport-github2";
 import UserManagerDao from "../dao/managers/userManager.manager.js";
+import config from "../config/config.js";
+
+const { GITHUB_CLIENT_ID, GITHUB_SECRET, GITHUB_CALLBACK_URL } = config;
 
 const LocalStrategy = local.Strategy;
 
 const initializePassport = () => {
   const userManager = new UserManagerDao();
+  passport.use(
+    "github",
+    new GitHubStrategy(
+      {
+        clientID: GITHUB_CLIENT_ID,
+        clientSecret: GITHUB_SECRET,
+        callbackURL: GITHUB_CALLBACK_URL,
+      },
+      async (accessToken, refreshToken, profile, done) => {
+        try {
+          const user = await userManager.getUserByEmail(profile._json.email || profile._json.login);
+          if (!user) {
+            const newUser = await userManager.createUser({
+              email: profile._json.email || profile._json.login,
+              firstName: profile._json.name,
+              lastName: "",
+              password: "",
+            });
+            return done(null, newUser);
+          }
+          return done(null, user);
+        } catch (error) {
+          return done(error);
+        }
+      }
+    )
+  );
+
   passport.use(
     "register",
     new LocalStrategy({ passReqToCallback: true, usernameField: "email" }, async (req, username, password, done) => {

@@ -14,7 +14,7 @@ export default class CartRouter {
     //Get cart
     this.router.get(`${this.path}`, async (req, res) => {
       try {
-        const cart = await this.cartManager.getCart(req.session.userId);
+        const cart = await this.cartManager.getCart(req.session.passport.user.userId);
         res.status(200).send({ status: "success", payload: cart });
       } catch ({ message }) {
         res.status(500).send({ status: "error", payload: message });
@@ -37,7 +37,7 @@ export default class CartRouter {
     this.router.post(`${this.path}`, async (req, res) => {
       try {
         const { io } = req;
-        const newCart = await this.cartManager.createCart(req.session.userId);
+        const newCart = await this.cartManager.createCart(req.session.passport.user.userId);
 
         io.emit("newCartList", newCart);
         io.emit("newCartMessage", "New cart!!");

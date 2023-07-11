@@ -76,6 +76,22 @@ export default class SessionRouter {
       });
     });
 
+    // Get Github
+    this.router.get(
+      `${this.path}/github`,
+      passport.authenticate("github", { scope: ["user:email"] }),
+      async (req, res) => {}
+    );
+
+    // Get Callback Github
+    this.router.get(
+      `${this.path}/gitHubCallback`,
+      passport.authenticate("github", { failureRedirect: `${this.path}/failedlogin` }),
+      async (req, res) => {
+        res.redirect("/views/cart");
+      }
+    );
+
     // Get session
     this.router.get(`${this.path}`, async (req, res) => {
       return res.status(200).json(req.session.passport.user);

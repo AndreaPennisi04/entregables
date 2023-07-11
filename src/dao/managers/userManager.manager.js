@@ -9,6 +9,9 @@ export default class UserManagerDao {
       if (!valid) {
         return undefined;
       }
+      if (!user) {
+        return undefined;
+      }
       delete user.password;
       return {
         firstName: user.first_name,
@@ -55,17 +58,35 @@ export default class UserManagerDao {
 
   getUserByEmail = async (email) => {
     try {
-      const [user] = await userModel.find({ email });
-      return user;
+      const user = await userModel.findOne({ email });
+      if (!user) {
+        return undefined;
+      }
+      delete user.password;
+      return {
+        firstName: user.first_name,
+        lastName: user.last_name,
+        role: user.role,
+        userId: user._id,
+        email: user.email,
+      };
     } catch (error) {
       console.log(error);
       throw error;
     }
   };
+
   getUserById = async (id) => {
     try {
-      const [user] = await userModel.find({ _id: id });
-      return user;
+      const user = await userModel.find({ _id: id });
+      delete user.password;
+      return {
+        firstName: user.first_name,
+        lastName: user.last_name,
+        role: user.role,
+        userId: user._id,
+        email: user.email,
+      };
     } catch (error) {
       console.log(error);
       throw error;
