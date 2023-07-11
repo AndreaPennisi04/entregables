@@ -1,5 +1,6 @@
 import { Router } from "express";
 import UserManagerDao from "../dao/managers/userManager.manager.js";
+import passport from "passport";
 
 export default class SessionRouter {
   path = "/session";
@@ -12,29 +13,24 @@ export default class SessionRouter {
 
   initSessionRoutes() {
     //Post login
-    this.router.post(`${this.path}/login`, async (req, res) => {
-      try {
-        const { email, password } = req.body;
-
-        const [user] = await this.userManager.login(email, password);
-
-        if (!user) {
-          res.status(403).json({ message: "Invalid email or password" });
-          return;
+    this.router.post(
+      `${this.path}/login`,
+      passport.authenticate("login", {
+        failureRedirect: `${this.path}/failedlogin`,
+      }),
+      async (req, res) => {
+        if (!req.user) {
+          return res.status(400).json({ message: "Invalid email or password" });
         }
 
-        req.session.admin = user.role === "admin";
-        req.session.email = user.email;
-        req.session.firstName = user.first_name;
-        req.session.lastName = user.last_name;
-        req.session.userId = user._id;
-
-        res.status(204).send();
-
-        return;
-      } catch (error) {
-        res.status(500).json({ status: "error", payload: error.message });
+        return res.status(204).send();
       }
+    );
+
+    //Fail Login
+    this.router.get(`${this.path}/failedlogin`, async (req, res) => {
+      console.log("Failed Login");
+      return res.send({ error: "failed" });
     });
 
     //Recover
@@ -55,30 +51,22 @@ export default class SessionRouter {
       }
     });
 
-    //Register
-    this.router.post(`${this.path}/register`, async (req, res) => {
-      try {
-        const user = req.body;
-
-        // segun el enunciado si viene adminCoder como emial lo grabo como admin,
-        // supongo que esto se rectificara en algun momento
-        user.role = user.email === "adminCoder" ? "admin" : "user";
-
-        await this.userManager.createUser(user);
-
-        const newUser = await this.userManager.getUserByEmail(user.email);
-
-        req.session.admin = newUser.role === "admin";
-        req.session.email = newUser.email;
-        req.session.firstName = newUser.first_name;
-        req.session.lastName = newUser.last_name;
-        req.session.userId = newUser._id;
-
-        res.status(204).send();
-      } catch ({ message }) {
-        res.status(500).json({ status: "error", payload: message });
-      }
+    //Fail Register
+    this.router.get(`${this.path}/failedregister`, async (req, res) => {
+      console.log("Failed Register");
+      res.send({ error: "failed" });
     });
+
+    //Register
+    this.router.post(
+      `${this.path}/register`,
+      passport.authenticate("register", {
+        failureRedirect: `${this.path}/failedregister`,
+      }),
+      async (req, res) => {
+        res.status(204).send();
+      }
+    );
 
     // Get logout
     this.router.get(`${this.path}/logout`, async (req, res) => {
@@ -90,7 +78,7 @@ export default class SessionRouter {
 
     // Get session
     this.router.get(`${this.path}`, async (req, res) => {
-      return res.status(200).json(req.session);
+      return res.status(200).json(req.session.passport.user);
     });
   }
 }

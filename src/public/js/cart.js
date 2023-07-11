@@ -24,7 +24,7 @@ const loadCart = async () => {
 };
 
 const sayHi = async () => {
-  const session = await fetch("/api/v1/session", { method: "GET" });
+  const session = await fetch("/session", { method: "GET" });
   console.log(session);
   const user = await session.json();
 
@@ -39,8 +39,8 @@ const sayHi = async () => {
 };
 
 const handleLogout = async () => {
-  await fetch("/api/v1/session/logout", { method: "GET" });
-  window.location.replace("/api/v1/login");
+  await fetch("/session/logout", { method: "GET" });
+  window.location.replace("/login");
 };
 
 sayHi();

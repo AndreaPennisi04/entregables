@@ -8,7 +8,7 @@ async function handleSubmit() {
       password: password.value,
     };
 
-    const result = await fetch("/api/v1/session/login", {
+    const result = await fetch("/session/login", {
       method: "POST",
       body: JSON.stringify(data),
       headers: {
@@ -17,7 +17,7 @@ async function handleSubmit() {
     });
 
     if (result.status === 204) {
-      window.location.replace("/api/v1/views/cart");
+      window.location.replace("/views/cart");
     } else {
       const messageLabel = document.getElementById("message");
       const { message } = await result.json();

@@ -11,7 +11,7 @@ async function handleSubmit() {
     lastName: lastName.value,
   };
 
-  const result = await fetch("/api/v1/session/register", {
+  const result = await fetch("/session/register", {
     method: "POST",
     body: JSON.stringify(data),
     headers: {
@@ -20,6 +20,6 @@ async function handleSubmit() {
   });
 
   if (result.status === 204) {
-    window.location.replace(" /api/v1/views/cart");
+    window.location.replace(" /views/cart");
   }
 }

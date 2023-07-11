@@ -1,4 +1,5 @@
 import express from "express";
+import passport from "passport";
 import handlebars from "express-handlebars";
 import displayRoutes from "express-routemap";
 import MongoStore from "connect-mongo";
@@ -9,6 +10,7 @@ import { mongoDBConnection } from "./db/mongo.config.js";
 import config from "./config/config.js";
 import MessagesManagerDao from "./dao/managers/messagesManager.managers.js";
 import session from "express-session";
+import initializePassport from "./config/passport.config.js";
 
 const { API_VERSION, CURSO, PORT, NODE_ENV, SIGNING_SECRET, DB_CNN, DB_NAME } = config;
 
@@ -17,15 +19,17 @@ export default class App {
   env;
   port;
   server;
-  routes;
+  apiRoutes;
+  viewRoutes;
   messagesManager;
 
-  constructor(routes) {
+  constructor(apiRoutes, viewRoutes) {
     this.app = express();
     this.port = PORT || 8000;
     this.env = NODE_ENV;
     this.initializeMiddlewares();
-    this.routes = routes;
+    this.apiRoutes = apiRoutes;
+    this.viewRoutes = viewRoutes;
     this.connectDB();
     this.initHandlebars();
     this.messagesManager = new MessagesManagerDao();
@@ -63,11 +67,17 @@ export default class App {
         saveUninitialized: false,
       })
     );
+    initializePassport();
+    this.app.use(passport.initialize());
+    this.app.use(passport.session());
   }
 
-  initializeRoutes(routes) {
-    routes.forEach((route) => {
+  initializeRoutes(apiRoutes, viewRoutes) {
+    apiRoutes.forEach((route) => {
       this.app.use(`/api/${API_VERSION}`, route.router);
+    });
+    viewRoutes.forEach((route) => {
+      this.app.use(`/`, route.router);
     });
   }
 
@@ -104,7 +114,7 @@ export default class App {
     });
 
     this.initializeWebChat(server);
-    this.initializeRoutes(this.routes);
+    this.initializeRoutes(this.apiRoutes, this.viewRoutes);
   }
 
   initHandlebars() {
