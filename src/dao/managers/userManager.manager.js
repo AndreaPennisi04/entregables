@@ -19,13 +19,14 @@ export default class UserManagerDao {
         role: user.role,
         userId: user._id,
         email: user.email,
+        age: user.age,
       };
     } catch (error) {
       throw new Error("There was an issue fetching the user from db");
     }
   };
 
-  createUser = async ({ email, password, firstName, lastName, role }) => {
+  createUser = async ({ email, password, firstName, lastName, role, age }) => {
     try {
       const newUser = await userModel.create({
         first_name: firstName,
@@ -33,6 +34,7 @@ export default class UserManagerDao {
         email,
         password: createHash(password),
         role,
+        age,
       });
       delete newUser.password;
 
@@ -42,6 +44,7 @@ export default class UserManagerDao {
         role: newUser.role,
         userId: newUser._id,
         email: newUser.email,
+        age: newUser.age,
       };
     } catch (error) {
       throw new Error("Error when creating a new user");
@@ -69,6 +72,7 @@ export default class UserManagerDao {
         role: user.role,
         userId: user._id,
         email: user.email,
+        age: user.age,
       };
     } catch (error) {
       console.log(error);
@@ -86,6 +90,7 @@ export default class UserManagerDao {
         role: user.role,
         userId: user._id,
         email: user.email,
+        age: user.age,
       };
     } catch (error) {
       console.log(error);

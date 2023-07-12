@@ -27,6 +27,7 @@ const initializePassport = () => {
               firstName: profile._json.name,
               lastName: "",
               password: "",
+              age: 0,
             });
             return done(null, newUser);
           }
@@ -41,7 +42,7 @@ const initializePassport = () => {
   passport.use(
     "register",
     new LocalStrategy({ passReqToCallback: true, usernameField: "email" }, async (req, username, password, done) => {
-      const { firstName, lastName, email, role } = req.body;
+      const { firstName, lastName, email, role, age } = req.body;
       try {
         let user = await userManager.getUserByEmail(email);
         if (user) {
@@ -54,6 +55,7 @@ const initializePassport = () => {
           email,
           password,
           role,
+          age,
         };
         let result = await userManager.createUser(newUser);
         return done(null, result);
