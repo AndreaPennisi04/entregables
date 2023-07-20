@@ -93,7 +93,7 @@ export default class SessionRouter {
     );
 
     // Get session
-    this.router.get(`${this.path}`, async (req, res) => {
+    this.router.get(`${this.path}/current`, async (req, res) => {
       return res.status(200).json(req.session.passport.user);
     });
   }

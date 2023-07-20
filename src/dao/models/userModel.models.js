@@ -9,7 +9,11 @@ const userSchema = new Schema({
     unique: true,
   },
   password: Schema.Types.String,
-  role: Schema.Types.String,
+  role: {
+    type: Schema.Types.String,
+    default: "user",
+  },
+  age: Schema.Types.Number,
 });
 
 export const userModel = mongoose.model(collection, userSchema);
