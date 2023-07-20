@@ -10,31 +10,43 @@
 			"name": "Product",
 			"item": [
 				{
-					"name": "List all products",
-					"protocolProfileBehavior": {
-						"disableBodyPruning": true
-					},
+					"name": "List products",
 					"request": {
 						"method": "GET",
 						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
 						"url": {
-							"raw": "http://localhost:8080/products",
+							"raw": "http://localhost:8080/api/v1/product",
 							"protocol": "http",
 							"host": [
 								"localhost"
 							],
 							"port": "8080",
 							"path": [
-								"products"
+								"api",
+								"v1",
+								"product"
+							],
+							"query": [
+								{
+									"key": "sort",
+									"value": "asc",
+									"disabled": true
+								},
+								{
+									"key": "limit",
+									"value": "1",
+									"disabled": true
+								},
+								{
+									"key": "page",
+									"value": "1",
+									"disabled": true
+								},
+								{
+									"key": "query",
+									"value": "{\"code\":\"2\"}",
+									"disabled": true
+								}
 							]
 						}
 					},
@@ -47,7 +59,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "    {\n        \"title\": \"OTRO Kia Sorrento\",\n        \"description\": \"Petrol\",\n        \"price\": 11111,\n        \"thumbnail\": \"Images not available\",\n        \"code\": \"8920\",\n        \"stock\": \"99\"\n    }",
+							"raw": "{\n    \"title\": \"Kia EV 9\",\n    \"description\": \"The Kia EV9 exudes a sense of serene contemporary calmness befitting a sophisticated EV for a new age of sustainable mobility. Yet, it also portrays the confident surety of a bold SUV poised to conquer all conditions.\",\n    \"price\": 55555,\n    \"thumbnail\": \"https://i.dailymail.co.uk/1s/2023/01/20/17/66797443-0-image-a-7_1674237495623.jpg\",\n    \"code\": \"007\",\n    \"stock\":3\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -55,14 +67,16 @@
 							}
 						},
 						"url": {
-							"raw": "http://localhost:8080/products",
+							"raw": "http://localhost:8080/api/v1/product",
 							"protocol": "http",
 							"host": [
 								"localhost"
 							],
 							"port": "8080",
 							"path": [
-								"products"
+								"api",
+								"v1",
+								"product"
 							]
 						}
 					},
@@ -75,7 +89,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"title\": \"Kia EV 9\",\n    \"description\": \"The Kia EV9 exudes a sense of serene contemporary calmness befitting a sophisticated EV for a new age of sustainable mobility. Yet, it also portrays the confident surety of a bold SUV poised to conquer all conditions.\",\n    \"price\": 55555,\n    \"thumbnail\": \"https://i.dailymail.co.uk/1s/2023/01/20/17/66797443-0-image-a-7_1674237495623.jpg\",\n    \"code\": \"007\",\n    \"stock\":3\n}",
+							"raw": "{\n    \"title\": \"Kia EV 9\",\n    \"description\": \"The Kia EV9 exudes a sense of serene contemporary calmness befitting a sophisticated EV for a new age of sustainable mobility. Yet, it also portrays the confident surety of a bold SUV poised to conquer all conditions.\",\n    \"price\": 123456,\n    \"thumbnail\": \"https://i.dailymail.co.uk/1s/2023/01/20/17/66797443-0-image-a-7_1674237495623.jpg\",\n    \"code\": \"007\",\n    \"stock\":3\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -83,15 +97,17 @@
 							}
 						},
 						"url": {
-							"raw": "http://localhost:8080/products/7",
+							"raw": "http://localhost:8080/api/v1/product/648f6187445e313659221f8c",
 							"protocol": "http",
 							"host": [
 								"localhost"
 							],
 							"port": "8080",
 							"path": [
-								"products",
-								"7"
+								"api",
+								"v1",
+								"product",
+								"648f6187445e313659221f8c"
 							]
 						}
 					},
@@ -103,15 +119,17 @@
 						"method": "DELETE",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:8080/products/12",
+							"raw": "http://localhost:8080/api/v1/product/648f6187445e313659221f8c",
 							"protocol": "http",
 							"host": [
 								"localhost"
 							],
 							"port": "8080",
 							"path": [
-								"products",
-								"12"
+								"api",
+								"v1",
+								"product",
+								"648f6187445e313659221f8c"
 							]
 						}
 					},
@@ -135,15 +153,17 @@
 							}
 						},
 						"url": {
-							"raw": "http://localhost:8080/products/7",
+							"raw": "http://localhost:8080/api/v1/product/648f6187445e313659221f8c",
 							"protocol": "http",
 							"host": [
 								"localhost"
 							],
 							"port": "8080",
 							"path": [
-								"products",
-								"7"
+								"api",
+								"v1",
+								"product",
+								"648f6187445e313659221f8c"
 							]
 						}
 					},
@@ -155,12 +175,57 @@
 			"name": "Cart",
 			"item": [
 				{
-					"name": "ListCartItems",
+					"name": "createNewCart",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/api/v1/cart",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"v1",
+								"cart"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "addProductToCart",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/api/v1/cart/649cc9948b58d3628d9e74c9/product/6492218e1e5a0643a50c09c9",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"v1",
+								"cart",
+								"649cc9948b58d3628d9e74c9",
+								"product",
+								"6492218e1e5a0643a50c09c9"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "getAllCarts",
 					"request": {
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:8080/api/cart",
+							"raw": "http://localhost:8080/api/v1/cart",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -168,6 +233,7 @@
 							"port": "8080",
 							"path": [
 								"api",
+								"v1",
 								"cart"
 							]
 						}
@@ -175,12 +241,21 @@
 					"response": []
 				},
 				{
-					"name": "AddCartItem",
+					"name": "addMultipleProducts",
 					"request": {
-						"method": "POST",
+						"method": "PUT",
 						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"products\": [\"64921a2724a562f9e1061d29\", \"6492218e1e5a0643a50c09c9\"]\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
 						"url": {
-							"raw": "http://localhost:8080/api/cart",
+							"raw": "http://localhost:8080/api/v1/cart/649cc9948b58d3628d9e74c9",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -188,30 +263,224 @@
 							"port": "8080",
 							"path": [
 								"api",
-								"cart"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "UpdateCartItem",
-					"request": {
-						"method": "POST",
-						"header": [],
-						"url": {
-							"raw": "http://localhost:8080/api/cart/10/product/8",
-							"protocol": "http",
-							"host": [
-								"localhost"
-							],
-							"port": "8080",
-							"path": [
-								"api",
+								"v1",
 								"cart",
-								"10",
+								"649cc9948b58d3628d9e74c9"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "setProductQuantity",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"quantity\": 1001\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/api/v1/cart/649cc9948b58d3628d9e74c9/product/64921a2724a562f9e1061d29",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"v1",
+								"cart",
+								"649cc9948b58d3628d9e74c9",
 								"product",
-								"8"
+								"64921a2724a562f9e1061d29"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "deleteProductFromCart",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/api/v1/cart/649cc9948b58d3628d9e74c9/product/6492218e1e5a0643a50c09c9",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"v1",
+								"cart",
+								"649cc9948b58d3628d9e74c9",
+								"product",
+								"6492218e1e5a0643a50c09c9"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "EmptyCart",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/api/v1/cart/649cb8114ae544ce012f9cdb",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"v1",
+								"cart",
+								"649cb8114ae544ce012f9cdb"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Session",
+			"item": [
+				{
+					"name": "Session login",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"username\": \"adminCoder\",\n    \"password\": \"adminCod3r123\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/api/session/login",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"session",
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Welcome",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/api/session/lwelcome?name=adminCoder",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"session",
+								"lwelcome"
+							],
+							"query": [
+								{
+									"key": "name",
+									"value": "adminCoder"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "login user",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"username\": \"Andrea\",\n    \"password\": \"123456\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/api/session/login",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"session",
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get login",
+					"request": {
+						"method": "GET",
+						"header": []
+					},
+					"response": []
+				},
+				{
+					"name": "Register",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"username\": \"Andrea\",\n    \"last_name\": \"Pennisi\",\n    \"password\":\"123456\",\n    \"email\":\"andrea@pennisi.com\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/api/session/register",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"session",
+								"register"
 							]
 						}
 					},
