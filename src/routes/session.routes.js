@@ -1,6 +1,5 @@
 import { Router } from "express";
 import UserManagerDao from "../dao/managers/userManager.manager.js";
-import passport from "passport";
 import { generateJWT, passportCall } from "../utils/jwt.js";
 import { authorization } from "../middleware/authorization.middleware.js";
 
@@ -63,8 +62,9 @@ export default class SessionRouter {
         const token = await generateJWT({ ...signUser });
 
         req.user = { ...signUser };
+        res.cookie("eCommerceCookieToken", token, { maxAge: 1000 * 60 * 30, httpOnly: true });
 
-        return res.json(token);
+        return res.status(204);
       } catch (error) {
         return done(`Error al obtener el usuario: ${error.message}`);
       }
@@ -95,7 +95,7 @@ export default class SessionRouter {
     });
 
     // Get session
-    this.router.get(`${this.path}`, [passportCall("jwt"), authorization("USER")], async (req, res) => {
+    this.router.get(`${this.path}`, [passportCall("jwt"), authorization(["ADMIN", "USER"])], async (req, res) => {
       return res.status(200).json(req.user);
     });
   }

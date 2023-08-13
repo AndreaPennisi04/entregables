@@ -29,5 +29,5 @@ async function handleSubmit() {
 }
 
 async function handleRegister() {
-  window.location.replace("/api/v1/register");
+  window.location.replace("/register");
 }

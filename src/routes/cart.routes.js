@@ -14,7 +14,7 @@ export default class CartRouter {
 
   initCartRoutes() {
     //Get cart
-    this.router.get(`${this.path}`, [passportCall("jwt"), authorization("USER")], async (req, res) => {
+    this.router.get(`${this.path}`, [passportCall("jwt"), authorization(["ADMIN", "USER"])], async (req, res) => {
       try {
         const cart = await this.cartManager.getCart(req.user.userId);
         res.status(200).send({ status: "success", payload: cart });
@@ -25,7 +25,7 @@ export default class CartRouter {
     });
 
     //Get cart by ID
-    this.router.get(`${this.path}/:cid`, [passportCall("jwt"), authorization("USER")], async (req, res) => {
+    this.router.get(`${this.path}/:cid`, [passportCall("jwt"), authorization(["ADMIN", "USER"])], async (req, res) => {
       try {
         const cartId = req.params.cid;
         const cartItems = await this.cartManager.getCartById(cartId);
@@ -36,10 +36,10 @@ export default class CartRouter {
     });
 
     //Post to create a new cart
-    this.router.post(`${this.path}`, [passportCall("jwt"), authorization("USER")], async (req, res) => {
+    this.router.post(`${this.path}`, [passportCall("jwt"), authorization(["ADMIN", "USER"])], async (req, res) => {
       try {
         const { io } = req;
-        const newCart = await this.cartManager.createCart(req.session.passport.user.userId);
+        const newCart = await this.cartManager.createCart(req.user.userId);
 
         io.emit("newCartList", newCart);
         io.emit("newCartMessage", "New cart!!");
@@ -53,7 +53,7 @@ export default class CartRouter {
     //Post to add a product to the cart
     this.router.post(
       `${this.path}/:cid/product/:pid`,
-      [passportCall("jwt"), authorization("USER")],
+      [passportCall("jwt"), authorization(["ADMIN", "USER"])],
       async (req, res) => {
         try {
           const cartId = req.params.cid;
@@ -67,7 +67,7 @@ export default class CartRouter {
     );
 
     //Put to add multiple products to the cart
-    this.router.put(`${this.path}/:cid`, [passportCall("jwt"), authorization("USER")], async (req, res) => {
+    this.router.put(`${this.path}/:cid`, [passportCall("jwt"), authorization(["ADMIN", "USER"])], async (req, res) => {
       try {
         const cartId = req.params.cid;
         const products = req.body.products;
@@ -83,7 +83,7 @@ export default class CartRouter {
     //Put to modify quantity of a product in a cart
     this.router.put(
       `${this.path}/:cid/product/:pid`,
-      [passportCall("jwt"), authorization("USER")],
+      [passportCall("jwt"), authorization(["ADMIN", "USER"])],
       async (req, res) => {
         try {
           const cartId = req.params.cid;
@@ -100,7 +100,7 @@ export default class CartRouter {
     // deletes one product from the cart
     this.router.delete(
       `${this.path}/:cid/product/:pid`,
-      [passportCall("jwt"), authorization("USER")],
+      [passportCall("jwt"), authorization(["ADMIN", "USER"])],
       async (req, res) => {
         try {
           const cartId = req.params.cid;
@@ -114,14 +114,18 @@ export default class CartRouter {
     );
 
     // deletes all products from the cart
-    this.router.delete(`${this.path}/:cid`, [passportCall("jwt"), authorization("USER")], async (req, res) => {
-      try {
-        const cartId = req.params.cid;
-        const cart = await this.cartManager.deleteAllProducts(cartId);
-        res.status(200).send({ status: "success", payload: cart });
-      } catch ({ message }) {
-        res.status(500).send({ status: "error", payload: message });
+    this.router.delete(
+      `${this.path}/:cid`,
+      [passportCall("jwt"), authorization(["ADMIN", "USER"])],
+      async (req, res) => {
+        try {
+          const cartId = req.params.cid;
+          const cart = await this.cartManager.deleteAllProducts(cartId);
+          res.status(200).send({ status: "success", payload: cart });
+        } catch ({ message }) {
+          res.status(500).send({ status: "error", payload: message });
+        }
       }
-    });
+    );
   }
 }

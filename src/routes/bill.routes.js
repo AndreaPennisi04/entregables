@@ -16,7 +16,7 @@ export default class BillRouter {
 
   initBillRoutes() {
     //Get bill by ID
-    this.router.get(`${this.path}/:bid`, [passportCall("jwt"), authorization("USER")], async (req, res) => {
+    this.router.get(`${this.path}/:bid`, [passportCall("jwt"), authorization(["ADMIN", "USER"])], async (req, res) => {
       try {
         const billId = req.params.bid;
         const billItems = await this.billManager.getBillById(billId);
@@ -27,7 +27,7 @@ export default class BillRouter {
     });
 
     //Post to create a new bill
-    this.router.post(`${this.path}`, [passportCall("jwt"), authorization("USER")], async (req, res) => {
+    this.router.post(`${this.path}`, [passportCall("jwt"), authorization(["ADMIN", "USER"])], async (req, res) => {
       try {
         const [cart] = await this.cartManager.getCart(req.user.userId);
         const newBill = await this.billManager.createBill(cart);

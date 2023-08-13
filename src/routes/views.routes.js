@@ -26,19 +26,27 @@ export default class ViewsRouter {
       res.render("home", { products, style: "home.css" });
     });
 
-    this.router.get(`${this.path}/products/:pn`, [passportCall("jwt"), authorization("USER")], async (req, res) => {
-      const pageNumber = req.params.pn;
-      const data = await this.productManager.getAllProducts(undefined, pageNumber, undefined, undefined, req.baseUrl);
-      res.render("products", { data, style: "products.css" });
-    });
+    this.router.get(
+      `${this.path}/products/:pn`,
+      [passportCall("jwt"), authorization(["ADMIN", "USER"])],
+      async (req, res) => {
+        const pageNumber = req.params.pn;
+        const data = await this.productManager.getAllProducts(undefined, pageNumber, undefined, undefined, req.baseUrl);
+        res.render("products", { data, style: "products.css" });
+      }
+    );
 
-    this.router.get(`${this.path}/bill/:id`, [passportCall("jwt"), authorization("USER")], async (req, res) => {
-      const billId = req.params.id;
-      const data = await this.billManager.getBillById(billId);
-      res.render("bill", { data, style: "bill.css" });
-    });
+    this.router.get(
+      `${this.path}/bill/:id`,
+      [passportCall("jwt"), authorization(["ADMIN", "USER"])],
+      async (req, res) => {
+        const billId = req.params.id;
+        const data = await this.billManager.getBillById(billId);
+        res.render("bill", { data, style: "bill.css" });
+      }
+    );
 
-    this.router.get(`${this.path}/cart`, [passportCall("jwt"), authorization("USER")], async (req, res) => {
+    this.router.get(`${this.path}/cart`, [passportCall("jwt"), authorization(["ADMIN", "USER"])], async (req, res) => {
       res.render("cart", { style: "products.css" });
     });
 
@@ -59,8 +67,8 @@ export default class ViewsRouter {
       res.render("recover", { style: "recover.css" });
     });
 
-    this.router.get("/profile", [passportCall("jwt"), authorization("USER")], async (req, res) => {
-      const user = req.session.user;
+    this.router.get("/profile", [passportCall("jwt"), authorization(["ADMIN", "USER"])], async (req, res) => {
+      const user = req.user;
       res.render("profile", {
         user,
         cart: {
