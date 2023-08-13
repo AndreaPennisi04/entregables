@@ -2,11 +2,13 @@ import { Router } from "express";
 import CartManagerDao from "../dao/managers/cartManager.managers.js";
 import { passportCall } from "../utils/jwt.js";
 import { authorization } from "../middleware/authorization.middleware.js";
+import BillManagerDao from "../dao/managers/billManager.managers.js";
 
 export default class CartRouter {
   path = "/cart";
   router = Router();
   cartManager = new CartManagerDao();
+  billManager = new BillManagerDao();
 
   constructor() {
     this.initCartRoutes();
@@ -29,6 +31,11 @@ export default class CartRouter {
       try {
         const cartId = req.params.cid;
         const cartItems = await this.cartManager.getCartById(cartId);
+        if (cartItems.user.id !== req.user.userId) {
+          res.status(401).send({ status: "error", payload: "Unauthorised" });
+          return;
+        }
+
         res.status(200).send({ status: "success", payload: cartItems });
       } catch ({ message }) {
         res.status(500).send({ status: "error", payload: message });
@@ -49,6 +56,23 @@ export default class CartRouter {
         res.status(500).send({ status: "error", payload: message });
       }
     });
+
+    //Post to create a new cart
+    this.router.post(
+      `${this.path}/:cid/purchase`,
+      [passportCall("jwt"), authorization(["ADMIN", "USER"])],
+      async (req, res) => {
+        try {
+          const cartId = req.params.cid;
+          const cart = await this.cartManager.getCartById(cartId);
+          const newBill = await this.billManager.createBill(cart);
+
+          res.status(200).send({ status: "success", payload: newBill });
+        } catch ({ message }) {
+          res.status(500).send({ status: "error", payload: message });
+        }
+      }
+    );
 
     //Post to add a product to the cart
     this.router.post(

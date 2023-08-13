@@ -1,3 +1,5 @@
+let cartId;
+
 const loadCart = async () => {
   let resCart = await fetch(`/api/v1/cart`, { method: "GET" });
 
@@ -6,6 +8,7 @@ const loadCart = async () => {
     throw new Error(`something went wrong ${dataCart.payload || ""}`);
   }
   let [cart] = dataCart.payload;
+  cartId = cart._id;
 
   const productList = document.getElementById("productList");
   productList.innerHTML = "";
@@ -39,7 +42,8 @@ const sayHi = async () => {
 };
 
 const completePurchase = async () => {
-  const result = await fetch(`/api/v1/bill`, { method: "POST" });
+  console.log(cartId);
+  const result = await fetch(`/api/v1/cart/${cartId}/purchase`, { method: "POST" });
   const resultData = await result.json();
   const modalResult = await Swal.fire({
     title: `Purchase complete`,

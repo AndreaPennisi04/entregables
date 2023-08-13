@@ -25,17 +25,5 @@ export default class BillRouter {
         res.status(500).send({ status: "error", payload: message });
       }
     });
-
-    //Post to create a new bill
-    this.router.post(`${this.path}`, [passportCall("jwt"), authorization(["ADMIN", "USER"])], async (req, res) => {
-      try {
-        const [cart] = await this.cartManager.getCart(req.user.userId);
-        const newBill = await this.billManager.createBill(cart);
-
-        res.status(200).send({ status: "success", payload: newBill });
-      } catch ({ message }) {
-        res.status(500).send({ status: "error", payload: message });
-      }
-    });
   }
 }
