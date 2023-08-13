@@ -1,5 +1,7 @@
 import { Router } from "express";
 import CartManagerDao from "../dao/managers/cartManager.managers.js";
+import { passportCall } from "../utils/jwt.js";
+import { authorization } from "../middleware/authorization.middleware.js";
 
 export default class CartRouter {
   path = "/cart";
@@ -12,9 +14,9 @@ export default class CartRouter {
 
   initCartRoutes() {
     //Get cart
-    this.router.get(`${this.path}`, async (req, res) => {
+    this.router.get(`${this.path}`, [passportCall("jwt"), authorization("USER")], async (req, res) => {
       try {
-        const cart = await this.cartManager.getCart(req.session.passport.user.userId);
+        const cart = await this.cartManager.getCart(req.user.userId);
         res.status(200).send({ status: "success", payload: cart });
       } catch ({ message }) {
         res.status(500).send({ status: "error", payload: message });
@@ -23,7 +25,7 @@ export default class CartRouter {
     });
 
     //Get cart by ID
-    this.router.get(`${this.path}/:cid`, async (req, res) => {
+    this.router.get(`${this.path}/:cid`, [passportCall("jwt"), authorization("USER")], async (req, res) => {
       try {
         const cartId = req.params.cid;
         const cartItems = await this.cartManager.getCartById(cartId);
@@ -34,7 +36,7 @@ export default class CartRouter {
     });
 
     //Post to create a new cart
-    this.router.post(`${this.path}`, async (req, res) => {
+    this.router.post(`${this.path}`, [passportCall("jwt"), authorization("USER")], async (req, res) => {
       try {
         const { io } = req;
         const newCart = await this.cartManager.createCart(req.session.passport.user.userId);
@@ -49,19 +51,23 @@ export default class CartRouter {
     });
 
     //Post to add a product to the cart
-    this.router.post(`${this.path}/:cid/product/:pid`, async (req, res) => {
-      try {
-        const cartId = req.params.cid;
-        const productId = req.params.pid;
-        const cart = await this.cartManager.addProductToCart(cartId, productId);
-        res.status(200).send({ status: "success", payload: cart });
-      } catch ({ message }) {
-        res.status(500).send({ status: "error", payload: message });
+    this.router.post(
+      `${this.path}/:cid/product/:pid`,
+      [passportCall("jwt"), authorization("USER")],
+      async (req, res) => {
+        try {
+          const cartId = req.params.cid;
+          const productId = req.params.pid;
+          const cart = await this.cartManager.addProductToCart(cartId, productId);
+          res.status(200).send({ status: "success", payload: cart });
+        } catch ({ message }) {
+          res.status(500).send({ status: "error", payload: message });
+        }
       }
-    });
+    );
 
     //Put to add multiple products to the cart
-    this.router.put(`${this.path}/:cid`, async (req, res) => {
+    this.router.put(`${this.path}/:cid`, [passportCall("jwt"), authorization("USER")], async (req, res) => {
       try {
         const cartId = req.params.cid;
         const products = req.body.products;
@@ -75,32 +81,40 @@ export default class CartRouter {
     });
 
     //Put to modify quantity of a product in a cart
-    this.router.put(`${this.path}/:cid/product/:pid`, async (req, res) => {
-      try {
-        const cartId = req.params.cid;
-        const productId = req.params.pid;
-        const quantity = req.body.quantity;
-        const cart = await this.cartManager.setProductQuantity(cartId, productId, quantity);
-        res.status(200).send({ status: "success", payload: cart });
-      } catch ({ message }) {
-        res.status(500).send({ status: "error", payload: message });
+    this.router.put(
+      `${this.path}/:cid/product/:pid`,
+      [passportCall("jwt"), authorization("USER")],
+      async (req, res) => {
+        try {
+          const cartId = req.params.cid;
+          const productId = req.params.pid;
+          const quantity = req.body.quantity;
+          const cart = await this.cartManager.setProductQuantity(cartId, productId, quantity);
+          res.status(200).send({ status: "success", payload: cart });
+        } catch ({ message }) {
+          res.status(500).send({ status: "error", payload: message });
+        }
       }
-    });
+    );
 
     // deletes one product from the cart
-    this.router.delete(`${this.path}/:cid/product/:pid`, async (req, res) => {
-      try {
-        const cartId = req.params.cid;
-        const productId = req.params.pid;
-        const cart = await this.cartManager.deleteProduct(cartId, productId);
-        res.status(200).send({ status: "success", payload: cart });
-      } catch ({ message }) {
-        res.status(500).send({ status: "error", payload: message });
+    this.router.delete(
+      `${this.path}/:cid/product/:pid`,
+      [passportCall("jwt"), authorization("USER")],
+      async (req, res) => {
+        try {
+          const cartId = req.params.cid;
+          const productId = req.params.pid;
+          const cart = await this.cartManager.deleteProduct(cartId, productId);
+          res.status(200).send({ status: "success", payload: cart });
+        } catch ({ message }) {
+          res.status(500).send({ status: "error", payload: message });
+        }
       }
-    });
+    );
 
     // deletes all products from the cart
-    this.router.delete(`${this.path}/:cid`, async (req, res) => {
+    this.router.delete(`${this.path}/:cid`, [passportCall("jwt"), authorization("USER")], async (req, res) => {
       try {
         const cartId = req.params.cid;
         const cart = await this.cartManager.deleteAllProducts(cartId);

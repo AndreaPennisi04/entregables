@@ -1,4 +1,5 @@
 import mongoose, { Schema } from "mongoose";
+import { RoleType } from "../../constant/role.js";
 
 const collection = "Users";
 const userSchema = new Schema({
@@ -11,7 +12,8 @@ const userSchema = new Schema({
   password: Schema.Types.String,
   role: {
     type: Schema.Types.String,
-    default: "user",
+    default: "USER",
+    enum: Object.values(RoleType),
   },
   age: Schema.Types.Number,
 });

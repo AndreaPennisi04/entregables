@@ -1,7 +1,8 @@
 import { Router } from "express";
 import ProductManagerDao from "../dao/managers/productManager.managers.js";
 import CartManagerDao from "../dao/managers/cartManager.managers.js";
-import authMdw from "../middleware/auth.middleware.js";
+import { authorization } from "../middleware/authorization.middleware.js";
+import { passportCall } from "../utils/jwt.js";
 
 export default class ViewsRouter {
   path = "/views";
@@ -29,7 +30,7 @@ export default class ViewsRouter {
       res.render("products", { data, style: "products.css" });
     });
 
-    this.router.get(`${this.path}/cart`, authMdw, async (req, res) => {
+    this.router.get(`${this.path}/cart`, [passportCall("jwt"), authorization("USER")], async (req, res) => {
       res.render("cart", { style: "products.css" });
     });
 
@@ -50,7 +51,7 @@ export default class ViewsRouter {
       res.render("recover", { style: "recover.css" });
     });
 
-    this.router.get("/profile", authMdw, async (req, res) => {
+    this.router.get("/profile", [passportCall("jwt"), authorization("USER")], async (req, res) => {
       const user = req.session.user;
       res.render("profile", {
         user,

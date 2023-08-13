@@ -30,8 +30,8 @@ const sayHi = async () => {
 
   Swal.fire({
     title: `Greetings`,
-    text: `This is your cart ${user.firstName} ${user.lastName},
-    We saved for you while you were away`,
+    text: `This is your cart ${user.firstName || ""} ${user.lastName || ""}
+    We saved it for you so you could use it later`,
     width: 600,
     padding: "3em",
     color: "#716add",

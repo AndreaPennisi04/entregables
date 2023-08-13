@@ -15,6 +15,7 @@ const {
   GITHUB_APP_ID,
   GITHUB_CLIENT_ID,
   GITHUB_CALLBACK_URL,
+  API_URL,
 } = process.env;
 
 export default {
@@ -29,4 +30,5 @@ export default {
   GITHUB_APP_ID,
   GITHUB_CLIENT_ID,
   GITHUB_CALLBACK_URL,
+  API_URL,
 };
