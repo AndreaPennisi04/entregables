@@ -12,7 +12,7 @@ export default class ProductRouter {
 
   initProductRoutes() {
     // Get products
-    this.router.get(`${this.path}`, async (req, res) => {
+    this.router.get(`${this.path}`, [passportCall("jwt"), authorization("USER")], async (req, res) => {
       try {
         const { limit, page, sort, query } = req.query;
         const products = await this.productManager.getAllProducts(limit, page, sort, query, req.baseUrl);
@@ -29,7 +29,7 @@ export default class ProductRouter {
     });
 
     //Get product by ID
-    this.router.get(`${this.path}/:pid`, async (req, res) => {
+    this.router.get(`${this.path}/:pid`, [passportCall("jwt"), authorization("USER")], async (req, res) => {
       const productId = req.params.pid;
       const product = await this.productManager.getProductById(productId);
       if (!product) {
@@ -41,7 +41,7 @@ export default class ProductRouter {
     });
 
     //Post
-    this.router.post(`${this.path}`, async (req, res) => {
+    this.router.post(`${this.path}`, [passportCall("jwt"), authorization("ADMIN")], async (req, res) => {
       const { body, io } = req;
       const newProduct = await this.productManager.addProduct(body);
       if (newProduct === false) {
@@ -57,8 +57,22 @@ export default class ProductRouter {
       res.status(200).json(newProduct);
     });
 
+    //Post
+    this.router.post(
+      `${this.path}/:pid/stock/:quantity`,
+      [passportCall("jwt"), authorization("USER")],
+      async (req, res) => {
+        const productId = req.params.pid;
+        const quantity = req.params.quantity;
+
+        await this.productManager.changeStockForProduct(productId, quantity);
+        const products = await this.productManager.getAllProducts();
+        res.status(200).json(products);
+      }
+    );
+
     //Put
-    this.router.put(`${this.path}/:pid`, async (req, res) => {
+    this.router.put(`${this.path}/:pid`, [passportCall("jwt"), authorization("ADMIN")], async (req, res) => {
       try {
         const productId = req.params.pid;
         const { title, description, price, thumbnail, code, stock } = req.body;
@@ -82,7 +96,7 @@ export default class ProductRouter {
     });
 
     //Delete
-    this.router.delete(`${this.path}/:pid`, async (req, res) => {
+    this.router.delete(`${this.path}/:pid`, [passportCall("jwt"), authorization("ADMIN")], async (req, res) => {
       try {
         const productId = req.params.pid;
         await this.productManager.removeProduct(productId);

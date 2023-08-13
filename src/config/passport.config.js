@@ -1,12 +1,12 @@
 import passport from "passport";
-import local from "passport-local";
 import GitHubStrategy from "passport-github2";
+import { Strategy as JwtStrategy, ExtractJwt } from "passport-jwt";
 import UserManagerDao from "../dao/managers/userManager.manager.js";
 import config from "../config/config.js";
+import { cookieExtractor } from "../utils/jwt.js";
+import { AvailableRoles } from "../constant/role.js";
 
-const { GITHUB_CLIENT_ID, GITHUB_SECRET, GITHUB_CALLBACK_URL } = config;
-
-const LocalStrategy = local.Strategy;
+const { GITHUB_CLIENT_ID, GITHUB_SECRET, GITHUB_CALLBACK_URL, SIGNING_SECRET, API_URL } = config;
 
 const initializePassport = () => {
   const userManager = new UserManagerDao();
@@ -40,44 +40,31 @@ const initializePassport = () => {
   );
 
   passport.use(
-    "register",
-    new LocalStrategy({ passReqToCallback: true, usernameField: "email" }, async (req, username, password, done) => {
-      const { firstName, lastName, email, role, age } = req.body;
-      try {
-        let user = await userManager.getUserByEmail(email);
-        if (user) {
-          console.log("user already exists");
-          return done(null, false);
-        }
-        const newUser = {
-          firstName,
-          lastName,
-          email,
-          password,
-          role,
-          age,
-        };
-        let result = await userManager.createUser(newUser);
-        return done(null, result);
-      } catch (error) {
-        return done(`Error al obtener el usuario: ${error.message}`);
-      }
-    })
-  );
+    "jwt",
+    new JwtStrategy(
+      {
+        jwtFromRequest: ExtractJwt.fromExtractors([cookieExtractor]),
+        secretOrKey: SIGNING_SECRET,
+        audience: API_URL,
+      },
+      async (jwtPayload, done) => {
+        try {
+          if (!(jwtPayload.user && jwtPayload.user.email && jwtPayload.user.role)) {
+            throw new Error("Badly formed payload");
+          }
 
-  passport.use(
-    "login",
-    new LocalStrategy({ usernameField: "email" }, async (username, password, done) => {
-      try {
-        const user = await userManager.login(username, password);
-        if (!user) {
+          const user = await userManager.getUserByEmail(jwtPayload.user.email);
+
+          if (user && AvailableRoles.includes(jwtPayload.user.role)) {
+            return done(null, user);
+          }
+
           return done(null, false);
+        } catch (error) {
+          return done(error, false);
         }
-        return done(null, user);
-      } catch (error) {
-        return done(error);
       }
-    })
+    )
   );
 
   passport.serializeUser((user, done) => {

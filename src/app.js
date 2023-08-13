@@ -2,6 +2,7 @@ import express from "express";
 import passport from "passport";
 import handlebars from "express-handlebars";
 import displayRoutes from "express-routemap";
+import cookieParser from "cookie-parser";
 import MongoStore from "connect-mongo";
 import cors from "cors";
 import { Server } from "socket.io";
@@ -9,7 +10,6 @@ import __dirname from "./utils.js";
 import { mongoDBConnection } from "./db/mongo.config.js";
 import config from "./config/config.js";
 import MessagesManagerDao from "./dao/managers/messagesManager.managers.js";
-import session from "express-session";
 import initializePassport from "./config/passport.config.js";
 
 const { API_VERSION, CURSO, PORT, NODE_ENV, SIGNING_SECRET, DB_CNN, DB_NAME } = config;
@@ -53,23 +53,10 @@ export default class App {
     this.app.use(cors());
     this.app.use(express.json());
     this.app.use(express.urlencoded({ extended: true }));
+    this.app.use(cookieParser());
     this.app.use(express.static(`${__dirname}/public`));
-    this.app.use(
-      session({
-        store: MongoStore.create({
-          mongoUrl: DB_CNN,
-          mongoOptions: { useNewUrlParser: true, useUnifiedTopology: true },
-          ttl: 60 * 15, //15 minutos
-          dbName: DB_NAME,
-        }),
-        secret: SIGNING_SECRET,
-        resave: false,
-        saveUninitialized: false,
-      })
-    );
     initializePassport();
     this.app.use(passport.initialize());
-    this.app.use(passport.session());
   }
 
   initializeRoutes(apiRoutes, viewRoutes) {
@@ -129,12 +116,5 @@ export default class App {
     );
     this.app.set("views", `${__dirname}/views`);
     this.app.set("view engine", "handlebars");
-    this.app.use(
-      session({
-        secret: "coderSecret",
-        resave: true,
-        saveUninitialized: true,
-      })
-    );
   }
 }

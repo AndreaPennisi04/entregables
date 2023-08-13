@@ -1,6 +1,8 @@
 import { Router } from "express";
 import UserManagerDao from "../dao/managers/userManager.manager.js";
 import passport from "passport";
+import { generateJWT, passportCall } from "../utils/jwt.js";
+import { authorization } from "../middleware/authorization.middleware.js";
 
 export default class SessionRouter {
   path = "/session";
@@ -13,88 +15,88 @@ export default class SessionRouter {
 
   initSessionRoutes() {
     //Post login
-    this.router.post(
-      `${this.path}/login`,
-      passport.authenticate("login", {
-        failureRedirect: `${this.path}/failedlogin`,
-      }),
-      async (req, res) => {
-        if (!req.user) {
+    this.router.post(`${this.path}/login`, async (req, res) => {
+      const { email, password } = req.body;
+
+      try {
+        const signUser = await this.userManager.login(email, password);
+        if (!signUser) {
           return res.status(400).json({ message: "Invalid email or password" });
         }
 
+        const token = await generateJWT({ ...signUser });
+
+        req.user = { ...signUser };
+        res.cookie("eCommerceCookieToken", token, { maxAge: 1000 * 60 * 30, httpOnly: true });
+
         return res.status(204).send();
-      }
-    );
-
-    //Fail Login
-    this.router.get(`${this.path}/failedlogin`, async (req, res) => {
-      console.log("Failed Login");
-      return res.send({ error: "failed" });
-    });
-
-    //Recover
-    this.router.post(`${this.path}/recover`, async (req, res) => {
-      try {
-        const { email, password } = req.body;
-        const user = await this.userManager.getUserByEmail(email);
-        if (!user) {
-          res.status(400).json({ message: "Invalid user" });
-          return;
-        }
-
-        await this.userManager.resetPassword({ email, password });
-        res.status(204).send();
       } catch (error) {
-        console.log(error);
-        res.status(500).json({ status: "error", payload: error.message });
+        console.error(error);
+        return res.status(500).json({ message: error });
       }
     });
-
-    //Fail Register
-    this.router.get(`${this.path}/failedregister`, async (req, res) => {
-      console.log("Failed Register");
-      res.send({ error: "failed" });
-    });
-
-    //Register
-    this.router.post(
-      `${this.path}/register`,
-      passport.authenticate("register", {
-        failureRedirect: `${this.path}/failedregister`,
-      }),
-      async (req, res) => {
-        res.status(204).send();
-      }
-    );
 
     // Get logout
     this.router.get(`${this.path}/logout`, async (req, res) => {
-      req.session.destroy((err) => {
-        if (!err) return res.json({ message: `logout successfully` });
-        return res.json({ message: `logout Error`, body: err });
-      });
+      res.clearCookie("eCommerceCookieToken").send();
+    });
+
+    //Register
+    this.router.post(`${this.path}/register`, async (req, res) => {
+      const { firstName, lastName, email, role, age, password } = req.body;
+      try {
+        let user = await this.userManager.getUserByEmail(email);
+        if (user) {
+          console.log("user already exists");
+          return res.status(400).json({ message: `User ${email} already exists` });
+        }
+        const newUser = {
+          firstName,
+          lastName,
+          email,
+          password,
+          role,
+          age,
+        };
+        let signUser = await this.userManager.createUser(newUser);
+
+        const token = await generateJWT({ ...signUser });
+
+        req.user = { ...signUser };
+
+        return res.json(token);
+      } catch (error) {
+        return done(`Error al obtener el usuario: ${error.message}`);
+      }
     });
 
     // Get Github
     this.router.get(
       `${this.path}/github`,
-      passport.authenticate("github", { scope: ["user:email"] }),
-      async (req, res) => {}
-    );
-
-    // Get Callback Github
-    this.router.get(
-      `${this.path}/gitHubCallback`,
-      passport.authenticate("github", { failureRedirect: `${this.path}/failedlogin` }),
+      passportCall("github", { scope: ["user:email"], session: false }),
       async (req, res) => {
-        res.redirect("/views/cart");
+        return res.status(204).send();
       }
     );
 
+    // Get Callback Github
+    this.router.get(`${this.path}/gitHubCallback`, passportCall("github", { session: false }), async (req, res) => {
+      const { user } = req;
+      if (!user) {
+        return res.status(400).json({ message: "Login failed" });
+      }
+
+      const token = await generateJWT({ ...user });
+
+      req.user = { ...user };
+      res.cookie("eCommerceCookieToken", token, { maxAge: 1000 * 60 * 30, httpOnly: true });
+
+      return res.redirect("/views/cart");
+    });
+
     // Get session
-    this.router.get(`${this.path}/current`, async (req, res) => {
-      return res.status(200).json(req.session.passport.user);
+    this.router.get(`${this.path}`, [passportCall("jwt"), authorization("USER")], async (req, res) => {
+      return res.status(200).json(req.user);
     });
   }
 }
