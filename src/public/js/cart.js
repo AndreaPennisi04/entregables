@@ -1,4 +1,4 @@
-let cartId;
+let currentCart;
 
 const loadCart = async () => {
   let resCart = await fetch(`/api/v1/cart`, { method: "GET" });
@@ -8,7 +8,12 @@ const loadCart = async () => {
     throw new Error(`something went wrong ${dataCart.payload || ""}`);
   }
   let [cart] = dataCart.payload;
-  cartId = cart._id;
+
+  currentCart = cart;
+
+  if (!currentCart) {
+    return;
+  }
 
   const productList = document.getElementById("productList");
   productList.innerHTML = "";
@@ -42,8 +47,18 @@ const sayHi = async () => {
 };
 
 const completePurchase = async () => {
-  console.log(cartId);
-  const result = await fetch(`/api/v1/cart/${cartId}/purchase`, { method: "POST" });
+  if (!currentCart || currentCart.products.lenght < 1) {
+    Swal.fire({
+      position: "top-end",
+      icon: "error",
+      title: `You need to add items to cart first`,
+      showConfirmButton: false,
+      timer: 5000,
+    });
+    return;
+  }
+
+  const result = await fetch(`/api/v1/cart/${currentCart._id}/purchase`, { method: "POST" });
   const resultData = await result.json();
   const modalResult = await Swal.fire({
     title: `Purchase complete`,
