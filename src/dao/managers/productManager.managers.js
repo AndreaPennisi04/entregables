@@ -67,4 +67,16 @@ export default class ProductManagerDao {
       console.log("🚀 ~ file: productManager.managers.js:57 ~ ProductManagerDao ~ updateProduct ~ error:", error);
     }
   }
+
+  async changeStockForProduct(productId, quantity) {
+    try {
+      if (!quantity || !productId) {
+        throw new Error("Need productId and quantity");
+      }
+
+      await productModel.updateOne({ _id: productId }, { $inc: { stock: quantity } });
+    } catch ({ message }) {
+      throw new Error(`Changing stock to product failed, message: ${message}`);
+    }
+  }
 }

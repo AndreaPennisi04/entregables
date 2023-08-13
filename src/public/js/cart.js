@@ -38,6 +38,23 @@ const sayHi = async () => {
   });
 };
 
+const completePurchase = async () => {
+  const result = await fetch(`/api/v1/bill`, { method: "POST" });
+  const resultData = await result.json();
+  const modalResult = await Swal.fire({
+    title: `Purchase complete`,
+    text: `Congratulations you copmleted your purchase 🎉 your order code is ${resultData.payload.code},
+    click below to see your bill`,
+    confirmButtonText: "Show bill",
+    width: 600,
+    padding: "3em",
+    color: "#716add",
+  });
+  if (modalResult.isConfirmed) {
+    window.location.replace(`/views/bill/${resultData.payload._id}`);
+  }
+};
+
 const handleLogout = async () => {
   await fetch("/session/logout", { method: "GET" });
   window.location.replace("/login");

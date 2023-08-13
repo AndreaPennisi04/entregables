@@ -57,6 +57,16 @@ export default class ProductRouter {
       res.status(200).json(newProduct);
     });
 
+    //Post
+    this.router.post(`${this.path}/:pid/stock/:quantity`, async (req, res) => {
+      const productId = req.params.pid;
+      const quantity = req.params.quantity;
+
+      await this.productManager.changeStockForProduct(productId, quantity);
+      const products = await this.productManager.getAllProducts();
+      res.status(200).json(products);
+    });
+
     //Put
     this.router.put(`${this.path}/:pid`, async (req, res) => {
       try {
