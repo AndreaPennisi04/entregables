@@ -30,8 +30,23 @@ export default class ViewsRouter {
       `${this.path}/products/:pn`,
       [passportCall("jwt"), authorization(["ADMIN", "USER"])],
       async (req, res) => {
-        const pageNumber = req.params.pn;
+        let pageNumber = req.params.pn;
+        if (pageNumber) {
+          pageNumber = Number(pageNumber);
+        }
+
         const data = await this.productManager.getAllProducts(undefined, pageNumber, undefined, undefined, req.baseUrl);
+
+        // dejo esto aca comentado para probar los fake products
+
+        // const data = await this.productManager.getAllFakeProducts(
+        //   undefined,
+        //   pageNumber,
+        //   undefined,
+        //   undefined,
+        //   req.baseUrl
+        // );
+
         res.render("products", { data, style: "products.css" });
       }
     );

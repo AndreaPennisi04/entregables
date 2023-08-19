@@ -1,3 +1,4 @@
+import { faker } from "@faker-js/faker";
 import { productModel } from "../models/productModel.models.js";
 
 export default class ProductManagerDao {
@@ -13,6 +14,39 @@ export default class ProductManagerDao {
         ...products,
         prevLink: products.prevPage && `${baseUrl}/views/products/${products.prevPage}`,
         nextLink: products.nextPage && `${baseUrl}/views/products/${products.nextPage}`,
+      };
+    } catch (error) {
+      throw new Error(
+        "Error parsing parameters, sort can only be asc/desc, limit: can only be a number, page: can only be a number, query: has to be a valid JSON compliant with MongoDB query"
+      );
+    }
+  };
+
+  getAllFakeProducts = async (limit = 10, page = 1, sort, query, baseUrl) => {
+    try {
+      if (sort || query) {
+        throw new Error("sort and query not supported on fake products");
+      }
+
+      const products = [];
+
+      for (let index = 0; index < 100; index++) {
+        products.push({
+          _id: faker.database.mongodbObjectId(),
+          title: `Kia ${faker.vehicle.model()}`,
+          description: `${faker.lorem.paragraph(3)}`,
+          price: faker.number.int({ min: 10000, max: 60000 }),
+          thumbnail: faker.image.url({ width: 640 }),
+          code: faker.number.int({ min: 1, max: 100000 }),
+          stock: faker.number.int({ min: 1, max: 50 }),
+          __v: 0,
+        });
+      }
+
+      return {
+        payload: products.slice(page * limit - limit, page * limit),
+        prevLink: page === 1 ? undefined : `${baseUrl}/views/products/${page - 1}`,
+        nextLink: `${baseUrl}/views/products/${page + 1}`,
       };
     } catch (error) {
       console.error("🚀 ~ file: productManager.managers.js:8 ~ ProductManagerDao ~ getAllProducts= ~ error:", error);

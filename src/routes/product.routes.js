@@ -42,6 +42,23 @@ export default class ProductRouter {
       }
     });
 
+    // Mocking products endpoint
+    this.router.get(`/mockingproducts`, async (req, res) => {
+      try {
+        const { limit, page, sort, query } = req.query;
+        const products = await this.productManager.getAllFakeProducts(limit, page, sort, query, req.baseUrl);
+        res.status(200);
+        res.send({
+          ...products,
+          status: "success",
+        });
+        return;
+      } catch ({ message }) {
+        res.status(500).send({ status: "error", payload: message });
+        return;
+      }
+    });
+
     //Post
     this.router.post(`${this.path}`, [passportCall("jwt"), authorization(["ADMIN"])], async (req, res) => {
       const { body, io } = req;

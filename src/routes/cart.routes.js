@@ -74,7 +74,7 @@ export default class CartRouter {
       }
     );
 
-    //Post to add a product to the cart
+    //Post to add a product to the cart by ID
     this.router.post(
       `${this.path}/:cid/product/:pid`,
       [passportCall("jwt"), authorization(["ADMIN", "USER"])],
