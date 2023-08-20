@@ -5,12 +5,22 @@ export default class MessagesManagerDao {
     try {
       const lastMessages = await messagesModel.find({}).sort({ _id: -1 }).limit(limit);
       return lastMessages;
-    } catch (error) {}
+    } catch (error) {
+      if (error.code) {
+        throw error;
+      }
+      throw new ClientError("MessagesManagerDao.getLastMessages", ErrorCode.DB_ISSUE);
+    }
   };
 
   newMessage = async (message) => {
     try {
       await messagesModel.create(message);
-    } catch (error) {}
+    } catch (error) {
+      if (error.code) {
+        throw error;
+      }
+      throw new ClientError("MessagesManagerDao.newMessage", ErrorCode.DB_ISSUE);
+    }
   };
 }

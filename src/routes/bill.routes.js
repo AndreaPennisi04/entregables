@@ -3,6 +3,8 @@ import BillManagerDao from "../dao/managers/billManager.managers.js";
 import { passportCall } from "../utils/jwt.js";
 import { authorization } from "../middleware/authorization.middleware.js";
 import CartManagerDao from "../dao/managers/cartManager.managers.js";
+import { ClientError } from "../utils/ClientError.js";
+import { ErrorCode } from "../utils/ErrorCode.js";
 
 export default class BillRouter {
   path = "/bill";
@@ -21,8 +23,8 @@ export default class BillRouter {
         const billId = req.params.bid;
         const billItems = await this.billManager.getBillById(billId);
         res.status(200).send({ status: "success", payload: billItems });
-      } catch ({ message }) {
-        res.status(500).send({ status: "error", payload: message });
+      } catch (error) {
+        next(error);
       }
     });
   }

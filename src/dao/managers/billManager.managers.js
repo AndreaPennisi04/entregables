@@ -2,6 +2,8 @@ import { billModel } from "../models/billModel.models.js";
 import crypto from "crypto";
 import CartManagerDao from "./cartManager.managers.js";
 import ProductManagerDao from "./productManager.managers.js";
+import { ClientError } from "../../utils/ClientError.js";
+import { ErrorCode } from "../../utils/ErrorCode.js";
 
 export default class BillManagerDao {
   cartManager;
@@ -18,7 +20,7 @@ export default class BillManagerDao {
       let billTotal = 0;
 
       if (!cart) {
-        throw new Error("cart not found");
+        throw new ClientError("billing", ErrorCode.CART_MISSING);
       }
 
       for (const product of cart.products) {
@@ -48,7 +50,7 @@ export default class BillManagerDao {
 
       return newBillItem;
     } catch ({ message }) {
-      throw new Error(`Creating bill failed, message: ${message}`);
+      throw new ClientError(`Creating bill failed, message: ${message}`);
     }
   }
 
@@ -57,7 +59,7 @@ export default class BillManagerDao {
       const bill = await billModel.findOne({ _id: id }).populate(["products.product", "user"]);
       return bill;
     } catch ({ message }) {
-      throw new Error(`Get bill by id failed, message: ${message}`);
+      throw new ClientError("billing dao", ErrorCode.BILL_MISSING);
     }
   };
 }

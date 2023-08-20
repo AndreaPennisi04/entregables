@@ -14,7 +14,7 @@ export default class SessionRouter {
 
   initSessionRoutes() {
     //Post login
-    this.router.post(`${this.path}/login`, async (req, res) => {
+    this.router.post(`${this.path}/login`, async (req, res, next) => {
       const { email, password } = req.body;
 
       try {
@@ -30,20 +30,23 @@ export default class SessionRouter {
 
         return res.status(204).send();
       } catch (error) {
-        console.error(error);
-        return res.status(500).json({ message: error });
+        next(error);
       }
     });
 
     // Get logout
-    this.router.get(`${this.path}/logout`, async (req, res) => {
-      res.clearCookie("eCommerceCookieToken").send();
+    this.router.get(`${this.path}/logout`, async (req, res, next) => {
+      try {
+        res.clearCookie("eCommerceCookieToken").send();
+      } catch (error) {
+        next(error);
+      }
     });
 
     //Register
-    this.router.post(`${this.path}/register`, async (req, res) => {
-      const { firstName, lastName, email, role, age, password } = req.body;
+    this.router.post(`${this.path}/register`, async (req, res, next) => {
       try {
+        const { firstName, lastName, email, role, age, password } = req.body;
         let user = await this.userManager.getUserByEmail(email);
         if (user) {
           console.log("user already exists");
@@ -66,7 +69,7 @@ export default class SessionRouter {
 
         return res.status(204);
       } catch (error) {
-        return done(`Error al obtener el usuario: ${error.message}`);
+        next(error);
       }
     });
 
@@ -74,29 +77,45 @@ export default class SessionRouter {
     this.router.get(
       `${this.path}/github`,
       passportCall("github", { scope: ["user:email"], session: false }),
-      async (req, res) => {
-        return res.status(204).send();
+      async (req, res, next) => {
+        try {
+          return res.status(204).send();
+        } catch (error) {
+          next(error);
+        }
       }
     );
 
     // Get Callback Github
-    this.router.get(`${this.path}/gitHubCallback`, passportCall("github", { session: false }), async (req, res) => {
-      const { user } = req;
-      if (!user) {
-        return res.status(400).json({ message: "Login failed" });
+    this.router.get(
+      `${this.path}/gitHubCallback`,
+      passportCall("github", { session: false }),
+      async (req, res, next) => {
+        try {
+          const { user } = req;
+          if (!user) {
+            return res.status(400).json({ message: "Login failed" });
+          }
+
+          const token = await generateJWT({ ...user });
+
+          req.user = { ...user };
+          res.cookie("eCommerceCookieToken", token, { maxAge: 1000 * 60 * 30, httpOnly: true });
+
+          return res.redirect("/views/cart");
+        } catch (error) {
+          next(error);
+        }
       }
-
-      const token = await generateJWT({ ...user });
-
-      req.user = { ...user };
-      res.cookie("eCommerceCookieToken", token, { maxAge: 1000 * 60 * 30, httpOnly: true });
-
-      return res.redirect("/views/cart");
-    });
+    );
 
     // Get session
-    this.router.get(`${this.path}`, [passportCall("jwt"), authorization(["ADMIN", "USER"])], async (req, res) => {
-      return res.status(200).json(req.user);
+    this.router.get(`${this.path}`, [passportCall("jwt"), authorization(["ADMIN", "USER"])], async (req, res, next) => {
+      try {
+        return res.status(200).json(req.user);
+      } catch (error) {
+        next(error);
+      }
     });
   }
 }

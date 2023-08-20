@@ -5,6 +5,8 @@ import UserManagerDao from "../dao/managers/userManager.manager.js";
 import config from "../config/config.js";
 import { cookieExtractor } from "../utils/jwt.js";
 import { AvailableRoles } from "../constant/role.js";
+import { ClientError } from "../utils/ClientError.js";
+import { ErrorCode } from "../utils/ErrorCode.js";
 
 const { GITHUB_CLIENT_ID, GITHUB_SECRET, GITHUB_CALLBACK_URL, SIGNING_SECRET, API_URL } = config;
 
@@ -50,7 +52,13 @@ const initializePassport = () => {
       async (jwtPayload, done) => {
         try {
           if (!(jwtPayload.user && jwtPayload.user.email && jwtPayload.user.role)) {
-            throw new Error("Badly formed payload");
+            throw new ClientError(
+              "passport",
+              ErrorCode.BAD_PARAMETERS,
+              400,
+              "bad request structure",
+              "The payload need to include user with an email and role"
+            );
           }
 
           const user = await userManager.getUserByEmail(jwtPayload.user.email);
