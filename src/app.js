@@ -3,7 +3,6 @@ import passport from "passport";
 import handlebars from "express-handlebars";
 import displayRoutes from "express-routemap";
 import cookieParser from "cookie-parser";
-import MongoStore from "connect-mongo";
 import cors from "cors";
 import { Server } from "socket.io";
 import __dirname from "./utils.js";
@@ -11,6 +10,7 @@ import { mongoDBConnection } from "./db/mongo.config.js";
 import config from "./config/config.js";
 import MessagesManagerDao from "./dao/managers/messagesManager.managers.js";
 import initializePassport from "./config/passport.config.js";
+import { ErrorHandler } from "./middleware/ErrorHandler.middleware.js";
 
 const { API_VERSION, CURSO, PORT, NODE_ENV, SIGNING_SECRET, DB_CNN, DB_NAME } = config;
 
@@ -102,6 +102,7 @@ export default class App {
 
     this.initializeWebChat(server);
     this.initializeRoutes(this.apiRoutes, this.viewRoutes);
+    this.app.use(ErrorHandler);
   }
 
   initHandlebars() {

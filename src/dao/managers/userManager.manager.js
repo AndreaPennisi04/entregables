@@ -22,7 +22,10 @@ export default class UserManagerDao {
         age: user.age,
       };
     } catch (error) {
-      throw new Error("There was an issue fetching the user from db");
+      if (error.code) {
+        throw error;
+      }
+      throw new ClientError("UserManagerDao.login", ErrorCode.DB_ISSUE);
     }
   };
 
@@ -47,7 +50,10 @@ export default class UserManagerDao {
         age: newUser.age,
       };
     } catch (error) {
-      throw new Error("Error when creating a new user");
+      if (error.code) {
+        throw error;
+      }
+      throw new ClientError("UserManagerDao.createUser", ErrorCode.DB_ISSUE);
     }
   };
 
@@ -55,7 +61,10 @@ export default class UserManagerDao {
     try {
       await userModel.updateOne({ email }, { password: createHash(password) });
     } catch (error) {
-      throw new Error("Error when changing password");
+      if (error.code) {
+        throw error;
+      }
+      throw new ClientError("UserManagerDao.resetPassword", ErrorCode.DB_ISSUE);
     }
   };
 
@@ -75,8 +84,10 @@ export default class UserManagerDao {
         age: user.age,
       };
     } catch (error) {
-      console.log(error);
-      throw error;
+      if (error.code) {
+        throw error;
+      }
+      throw new ClientError("UserManagerDao.getUserByEmail", ErrorCode.DB_ISSUE);
     }
   };
 
@@ -93,8 +104,10 @@ export default class UserManagerDao {
         age: user.age,
       };
     } catch (error) {
-      console.log(error);
-      throw error;
+      if (error.code) {
+        throw error;
+      }
+      throw new ClientError("UserManagerDao.getUserById", ErrorCode.DB_ISSUE);
     }
   };
 }
