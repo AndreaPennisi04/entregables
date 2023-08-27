@@ -6,7 +6,8 @@
   "main": "app.js",
   "scripts": {
     "start": "node ./src/index.js",
-    "dev": "cross-env NODE_ENV=dev nodemon  --inspect=10101 --enable-source-maps ./src/index.js",
+    "desarrollo": "cross-env NODE_ENV=desarrollo nodemon  --inspect=10101 --enable-source-maps ./src/index.js",
+    "produccion": "cross-env NODE_ENV=produccion nodemon ./src/index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "Andrea Pennisi",
@@ -35,7 +36,8 @@
     "passport-local": "^1.0.0",
     "session-file-store": "^1.5.0",
     "socket.io": "^4.6.1",
-    "websockets": "^0.2.0"
+    "websockets": "^0.2.0",
+    "winston": "^3.10.0"
   },
   "devDependencies": {
     "@faker-js/faker": "^8.0.2"
