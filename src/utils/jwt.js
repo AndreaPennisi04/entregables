@@ -1,6 +1,7 @@
 import jwt from "jsonwebtoken";
 import passport from "passport";
 import config from "../config/config.js";
+import { getLogger } from "./logger.js";
 
 const { SIGNING_SECRET, API_URL } = config;
 
@@ -8,7 +9,8 @@ export const generateJWT = (user) => {
   return new Promise((resolve, reject) => {
     jwt.sign({ user }, SIGNING_SECRET, { expiresIn: "30m", audience: API_URL }, (err, token) => {
       if (err) {
-        console.log(err);
+        const logger = getLogger();
+        logger.error(err);
         reject("can not generate jwt token");
       }
       resolve(token);

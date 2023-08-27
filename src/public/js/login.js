@@ -24,7 +24,8 @@ async function handleSubmit() {
       messageLabel.innerText = message;
     }
   } catch (error) {
-    console.error(error);
+    const messageLabel = document.getElementById("message");
+    messageLabel.innerText = JSON.stringify(error);
   }
 }
 

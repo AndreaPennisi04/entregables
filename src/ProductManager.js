@@ -1,9 +1,11 @@
 import { promises as fs } from "fs";
+import { getLogger } from "./utils/logger.js";
 
 export default class ProductManager {
   constructor(path) {
     this.path = path;
     this.products = [];
+    this.logger = getLogger();
   }
 
   _writeProductsToFile = async (products) => {
@@ -21,12 +23,12 @@ export default class ProductManager {
       !product.code ||
       !product.stock
     ) {
-      console.error("Data missing. All data is required");
+      this.logger.error("Data missing. All data is required");
       return false;
     }
 
     if (currentProducts.some((p) => p.code === product.code)) {
-      console.log(`A product with the code: ${product.code} already exists`);
+      this.logger.warning(`A product with the code: ${product.code} already exists`);
       return false;
     }
 
@@ -42,7 +44,7 @@ export default class ProductManager {
     try {
       await this._writeProductsToFile(currentProducts);
     } catch (error) {
-      console.error(`Error reading file: ${this.path} - ${error.message}`);
+      this.logger.error(`Error reading file: ${this.path} - ${error.message}`);
       return false;
     }
 
@@ -58,7 +60,7 @@ export default class ProductManager {
         productsFromFile = productsFromFile.slice(0, parseInt(limit));
       }
     } catch (error) {
-      console.error(`Error reading file: ${this.path} - ${error.message}`);
+      this.logger.error(`Error reading file: ${this.path} - ${error.message}`);
     }
     return productsFromFile;
   };
@@ -74,7 +76,7 @@ export default class ProductManager {
     const indexOfProductToUpdate = updateArray.findIndex((p) => p.id === id);
 
     if (indexOfProductToUpdate < 0) {
-      console.error(`Can't find the product you are trying to update: id: ${id}`);
+      this.logger.error(`Can't find the product you are trying to update: id: ${id}`);
       return;
     }
 
@@ -83,7 +85,7 @@ export default class ProductManager {
     try {
       await this._writeProductsToFile(updateArray);
     } catch (error) {
-      console.error(`Error writing file: ${this.path} - ${error.message}`);
+      this.logger.error(`Error writing file: ${this.path} - ${error.message}`);
     }
 
     return updateProduct;
@@ -95,7 +97,7 @@ export default class ProductManager {
     const indexOfProductToDelete = arrayToUpdate.findIndex((p) => p.id === id);
 
     if (indexOfProductToDelete < 0) {
-      console.error(`Can't find the product you are trying to delete: id: ${id}`);
+      this.logger.error(`Can't find the product you are trying to delete: id: ${id}`);
       return false;
     }
 
@@ -104,7 +106,7 @@ export default class ProductManager {
     try {
       await this._writeProductsToFile(arrayToUpdate);
     } catch (error) {
-      console.error(`Error writing file: ${this.path} - ${error.message}`);
+      this.logger.error(`Error writing file: ${this.path} - ${error.message}`);
       return false;
     }
 

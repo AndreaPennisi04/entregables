@@ -1,10 +1,6 @@
 const socket = io();
 let user = "";
 
-socket.on("newProductMessage", (data) => {
-  console.log(data);
-});
-
 const saveForm = async () => {
   const title = document.getElementById("title").value;
   const description = document.getElementById("description").value;
@@ -38,7 +34,6 @@ const showChatLoginForm = async () => {
       autocapitalize: "off",
     },
     preConfirm: (username) => {
-      console.log("🚀 ~ file: index.js:50 ~ showChatLoginForm ~ username:", username);
       if (!username) {
         Swal.showValidationMessage(`You need to provide a username`);
       }
