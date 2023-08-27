@@ -22,6 +22,8 @@ const customLevelsOptions = {
   },
 };
 
+winston.addColors(customLevelsOptions.colors);
+
 const logger = winston.createLogger({
   levels: customLevelsOptions.levels,
   transports: [
