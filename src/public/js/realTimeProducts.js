@@ -17,7 +17,3 @@ socket.on("newProductsList", (products) => {
     productList.appendChild(row);
   }
 });
-
-socket.on("newProductMessage", (data) => {
-  console.log(data);
-});

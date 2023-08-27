@@ -33,7 +33,6 @@ const loadCart = async () => {
 
 const sayHi = async () => {
   const session = await fetch("/session", { method: "GET" });
-  console.log(session);
   const user = await session.json();
 
   Swal.fire({

@@ -5,7 +5,6 @@ const createCart = async () => {
     throw new Error(`something went wrong ${data.payload || ""}`);
   }
   cartId = data.payload._id;
-  console.log(`created a new cart id ${cartId}`);
   return cartId;
 };
 
@@ -14,7 +13,6 @@ const addToCart = async (productId) => {
     let resCart = await fetch(`/api/v1/cart`, { method: "GET" });
 
     let dataCart = await resCart.json();
-    console.log(dataCart);
     if (!dataCart || dataCart.status === "error") {
       throw new Error(`something went wrong ${dataCart.payload || ""}`);
     }
@@ -40,15 +38,14 @@ const addToCart = async (productId) => {
       showConfirmButton: false,
       timer: 1500,
     });
-    console.log(data.payload);
   } catch (error) {
     Swal.fire({
       position: "top-end",
       icon: "error",
       title: `Something went wrong `,
       showConfirmButton: false,
+      error: error,
       timer: 1500,
     });
-    console.error(error);
   }
 };

@@ -1,5 +1,6 @@
 import { connect } from "mongoose";
 import config from "../config/config.js";
+import { getLogger } from "../utils/logger.js";
 
 const { DB_CNN, DB_NAME } = config;
 
@@ -14,11 +15,10 @@ const configConnection = {
 
 export const mongoDBConnection = async () => {
   try {
+    const logger = getLogger();
     await connect(configConnection.url, configConnection.options);
-    console.log(`=======================CONNECCION MONGO======================`);
-    console.log(`======= URL: ${configConnection.url.substring(0, 20)} =======`);
-    console.log(`=============================================================`);
+    logger.info(`CONNECCION MONGO URL: ${configConnection.url.substring(0, 20)} =======`);
   } catch (err) {
-    console.log("🚀 ~ file: mongo.config.js:21 ~ mongoDBConnection ~ err:", err);
+    logger.fatal("🚀 ~ file: mongo.config.js:21 ~ mongoDBConnection ~ err:", err);
   }
 };

@@ -1,6 +1,7 @@
 import { ErrorCode } from "../utils/ErrorCode.js";
 
 export const ErrorHandler = (error, req, res, next) => {
+  req.logger.error(JSON.stringify(error));
   switch (error.code) {
     case ErrorCode.BAD_PARAMETERS:
       res.status(error.httpStatus).send({

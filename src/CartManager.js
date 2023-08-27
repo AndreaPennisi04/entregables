@@ -1,11 +1,15 @@
 import { promises as fs } from "fs";
 import ProductManager from "./ProductManager.js";
+import { getLogger } from "./utils/logger.js";
 
 export default class CartManager {
+  logger;
+
   constructor(cartDbPath, productDbPath) {
     this.cartDbPath = cartDbPath;
     this.productManager = new ProductManager(productDbPath);
     this.cart = [];
+    this.logger = getLogger();
   }
 
   _writecartToFile = async (cart) => {
@@ -27,7 +31,7 @@ export default class CartManager {
     try {
       await this._writecartToFile(currentCart);
     } catch (error) {
-      console.error(`Error reading file: ${this.cartDbPath} - ${error.message}`);
+      this.logger.error(`Error reading file: ${this.cartDbPath} - ${error.message}`);
       return false;
     }
 
@@ -44,7 +48,7 @@ export default class CartManager {
         cartFromFile = cartFromFile.slice(0, parseInt(limit));
       }
     } catch (error) {
-      console.error(`Error reading file: ${this.cartDbPath} - ${error.message}`);
+      this.logger.error(`Error reading file: ${this.cartDbPath} - ${error.message}`);
     }
     return cartFromFile;
   };
@@ -57,7 +61,7 @@ export default class CartManager {
   // Add product to cart
   async addProductToCart(cartId, productId) {
     if (!cartId || !productId) {
-      console.error("Need productId and cartId");
+      this.logger.error("Need productId and cartId");
       return false;
     }
 
@@ -66,7 +70,7 @@ export default class CartManager {
 
     const product = await this.productManager.getProductById(pid);
     if (!product) {
-      console.error("The product you are trying to update does not exist");
+      this.logger.error("The product you are trying to update does not exist");
       return false;
     }
 
@@ -74,7 +78,7 @@ export default class CartManager {
     const indexOfCartItemToUpdate = updateArray.findIndex((p) => p.id === cid);
 
     if (indexOfCartItemToUpdate < 0) {
-      console.error(`The cart you are looking for does not exist`);
+      this.logger.error(`The cart you are looking for does not exist`);
       return;
     }
 
@@ -93,7 +97,7 @@ export default class CartManager {
     try {
       await this._writecartToFile(updateArray);
     } catch (error) {
-      console.error(`Error writing file: ${this.cartDbPath} - ${error.message}`);
+      this.logger.error(`Error writing file: ${this.cartDbPath} - ${error.message}`);
     }
 
     return updateArray[indexOfCartItemToUpdate];

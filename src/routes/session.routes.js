@@ -49,7 +49,7 @@ export default class SessionRouter {
         const { firstName, lastName, email, role, age, password } = req.body;
         let user = await this.userManager.getUserByEmail(email);
         if (user) {
-          console.log("user already exists");
+          req.logger.warning(`User ${email} already exists`);
           return res.status(400).json({ message: `User ${email} already exists` });
         }
         const newUser = {
