@@ -70,6 +70,20 @@ export default class App {
     viewRoutes.forEach((route) => {
       this.app.use(`/`, route.router);
     });
+
+    this.app.get(`/loggerTest`, (req, res) => {
+      try {
+        req.logger.fatal("Testing fatal message");
+        req.logger.error("Testing error message");
+        req.logger.warning("Testing warning message");
+        req.logger.info("Testing info message");
+        req.logger.http("Testing http message");
+        req.logger.debug("Testing debug message");
+        res.send("All logs have been triggered ");
+      } catch (error) {
+        res.logger.error(error);
+      }
+    });
   }
 
   initializeWebChat(server) {
@@ -100,6 +114,7 @@ export default class App {
       displayRoutes(this.app);
       this.logger.info(`COURSE: ${CURSO}`);
       this.logger.info(`ENV: ${this.env}`);
+      this.logger.info(`PORT: ${this.port}`);
     });
 
     this.initializeWebChat(server);
