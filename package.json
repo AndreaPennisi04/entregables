@@ -5,10 +5,8 @@
   "type": "module",
   "main": "app.js",
   "scripts": {
-    "start": "node ./src/index.js",
     "desarrollo": "cross-env NODE_ENV=desarrollo nodemon  --inspect=10101 --enable-source-maps ./src/index.js",
-    "produccion": "cross-env NODE_ENV=produccion nodemon ./src/index.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "produccion": "cross-env NODE_ENV=produccion nodemon ./src/index.js"
   },
   "author": "Andrea Pennisi",
   "license": "ISC",
