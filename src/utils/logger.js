@@ -1,7 +1,7 @@
 import winston from "winston";
 import config from "../config/config.js";
 
-const { LOG_LEVEL_CONSOLE, LOG_LEVEL_FILE } = config;
+const { LOG_LEVEL_CONSOLE, LOG_LEVEL_FILE, NODE_ENV } = config;
 
 const customLevelsOptions = {
   levels: {
@@ -31,9 +31,12 @@ const logger = winston.createLogger({
       level: LOG_LEVEL_CONSOLE,
       format: winston.format.combine(winston.format.colorize(), winston.format.simple()),
     }),
-    new winston.transports.File({ filename: "./errors.log", level: LOG_LEVEL_FILE }),
   ],
 });
+
+if (NODE_ENV === "produccion") {
+  logger.transports.push(new winston.transports.File({ filename: "./errors.log", level: LOG_LEVEL_FILE }));
+}
 
 export const addLogger = (req, res, next) => {
   req.logger = logger;
