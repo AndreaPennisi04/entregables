@@ -32,7 +32,7 @@ export default class ViewsRouter {
 
     this.router.get(
       `${this.path}/products/:pn`,
-      [passportCall("jwt"), authorization(["ADMIN", "USER"])],
+      [passportCall("jwt"), authorization([RoleType.ADMIN, RoleType.USER, RoleType.PREMIUM])],
       async (req, res, next) => {
         try {
           let pageNumber = req.params.pn;
@@ -67,7 +67,7 @@ export default class ViewsRouter {
 
     this.router.get(
       `${this.path}/bill/:id`,
-      [passportCall("jwt"), authorization(["ADMIN", "USER"])],
+      [passportCall("jwt"), authorization([RoleType.ADMIN, RoleType.USER, RoleType.PREMIUM])],
       async (req, res, next) => {
         try {
           const billId = req.params.id;
@@ -79,9 +79,13 @@ export default class ViewsRouter {
       }
     );
 
-    this.router.get(`${this.path}/cart`, [passportCall("jwt"), authorization(["ADMIN", "USER"])], (req, res) => {
-      res.render("cart", { style: "products.css" });
-    });
+    this.router.get(
+      `${this.path}/cart`,
+      [passportCall("jwt"), authorization([RoleType.ADMIN, RoleType.USER, RoleType.PREMIUM])],
+      (req, res) => {
+        res.render("cart", { style: "products.css" });
+      }
+    );
 
     this.router.get(`${this.path}/realtimeproducts`, async (req, res, next) => {
       try {
@@ -100,18 +104,23 @@ export default class ViewsRouter {
       res.render("register");
     });
 
-    this.router.get("/recover", (req, res) => {
-      res.render("recover", { style: "recover.css" });
+    this.router.get("/recover/:token", (req, res) => {
+      const { token } = req.params;
+      res.render("recover", { style: "recover.css", token });
     });
 
-    this.router.get("/profile", [passportCall("jwt"), authorization(["ADMIN", "USER"])], (req, res) => {
-      const user = req.user;
-      res.render("profile", {
-        user,
-        cart: {
-          cartId: "_id",
-        },
-      });
-    });
+    this.router.get(
+      "/profile",
+      [passportCall("jwt"), authorization([RoleType.ADMIN, RoleType.USER, RoleType.PREMIUM])],
+      (req, res) => {
+        const user = req.user;
+        res.render("profile", {
+          user,
+          cart: {
+            cartId: "_id",
+          },
+        });
+      }
+    );
   }
 }

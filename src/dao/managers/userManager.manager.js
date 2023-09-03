@@ -1,3 +1,4 @@
+import { RoleType } from "../../constant/role.js";
 import { createHash, isValidPassword } from "../../utils/encrypt.js";
 import { userModel } from "../models/userModel.models.js";
 
@@ -26,6 +27,25 @@ export default class UserManagerDao {
         throw error;
       }
       throw new ClientError("UserManagerDao.login", ErrorCode.DB_ISSUE);
+    }
+  };
+
+  togglePremium = async (userId) => {
+    try {
+      const user = await userModel.findOne({ _id: userId });
+
+      await userModel.updateOne(
+        { _id: userId },
+        {
+          ...user,
+          role: user.role === RoleType.USER || user.role === RoleType.ADMIN ? RoleType.PREMIUM : RoleType.USER,
+        }
+      );
+    } catch (error) {
+      if (error.code) {
+        throw error;
+      }
+      throw new ClientError("UserManagerDao.togglePremium", ErrorCode.DB_ISSUE);
     }
   };
 
