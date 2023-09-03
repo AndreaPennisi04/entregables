@@ -2,11 +2,17 @@ import { Router } from "express";
 import UserManagerDao from "../dao/managers/userManager.manager.js";
 import { generateJWT, passportCall } from "../utils/jwt.js";
 import { authorization } from "../middleware/authorization.middleware.js";
+import TemporaryCredentialsDao from "../dao/managers/temporaryCredentials.managers.js";
+import { ClientError } from "../utils/ClientError.js";
+import { ErrorCode } from "../utils/ErrorCode.js";
+import EmailService from "../services/emailService.js";
+import config from "../config/config.js";
 
 export default class SessionRouter {
   path = "/session";
   router = Router();
   userManager = new UserManagerDao();
+  temporaryCredentialsManager = new TemporaryCredentialsDao();
 
   constructor() {
     this.initSessionRoutes();
@@ -67,7 +73,7 @@ export default class SessionRouter {
         req.user = { ...signUser };
         res.cookie("eCommerceCookieToken", token, { maxAge: 1000 * 60 * 30, httpOnly: true });
 
-        return res.status(204);
+        return res.status(204).send();
       } catch (error) {
         next(error);
       }
@@ -113,6 +119,64 @@ export default class SessionRouter {
     this.router.get(`${this.path}`, [passportCall("jwt"), authorization(["ADMIN", "USER"])], async (req, res, next) => {
       try {
         return res.status(200).json(req.user);
+      } catch (error) {
+        next(error);
+      }
+    });
+
+    this.router.post(`${this.path}/password-reset/begin`, async (req, res, next) => {
+      try {
+        const { email } = req.body;
+        const { API_URL } = config;
+        if (!email) {
+          throw new ClientError("Session", ErrorCode.BAD_PARAMETERS, 400, "Email is required");
+        }
+
+        const token = await this.temporaryCredentialsManager.createTemporaryCredentials(email);
+        const emailService = new EmailService();
+        await emailService.sendPasswordResetEmail(email, `${API_URL}/recover/${token}`);
+
+        return res.status(204).send();
+      } catch (error) {
+        next(error);
+      }
+    });
+
+    this.router.post(`${this.path}/password-reset/complete`, async (req, res, next) => {
+      try {
+        const { token, password } = req.body;
+        if (!token) {
+          throw new ClientError("Session", ErrorCode.BAD_PARAMETERS, 400, "Missing parameters");
+        }
+
+        const user = await this.temporaryCredentialsManager.validateTemporaryCredentials(token);
+        if (!user) {
+          throw new ClientError(
+            "Session",
+            ErrorCode.UNAUTHORISED,
+            403,
+            "The link you have used is no longer valid, please start again"
+          );
+        }
+
+        const tryPassword = await this.userManager.login(user.email, password);
+        if (tryPassword) {
+          throw new ClientError("Session", ErrorCode.SAME_PASSWORD);
+        }
+
+        await this.userManager.resetPassword({ email: user.email, password });
+
+        const signUser = await this.userManager.login(user.email, password);
+        if (!signUser) {
+          throw new ClientError("Session", ErrorCode.UNAUTHORISED);
+        }
+
+        const newAccessToken = await generateJWT({ ...signUser });
+
+        req.user = { ...signUser };
+        res.cookie("eCommerceCookieToken", newAccessToken, { maxAge: 1000 * 60 * 30, httpOnly: true });
+
+        return res.status(204).send();
       } catch (error) {
         next(error);
       }

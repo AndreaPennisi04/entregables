@@ -1,7 +1,6 @@
 export class ClientError extends Error {
   httpStatus;
   service;
-  message;
   details;
   code;
 

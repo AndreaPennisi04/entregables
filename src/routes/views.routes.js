@@ -100,8 +100,9 @@ export default class ViewsRouter {
       res.render("register");
     });
 
-    this.router.get("/recover", (req, res) => {
-      res.render("recover", { style: "recover.css" });
+    this.router.get("/recover/:token", (req, res) => {
+      const { token } = req.params;
+      res.render("recover", { style: "recover.css", token });
     });
 
     this.router.get("/profile", [passportCall("jwt"), authorization(["ADMIN", "USER"])], (req, res) => {

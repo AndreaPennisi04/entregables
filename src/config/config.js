@@ -19,6 +19,8 @@ const {
   API_URL,
   LOG_LEVEL_CONSOLE,
   LOG_LEVEL_FILE,
+  EMAIL_ADDRESS,
+  EMAIL_SECRET,
 } = process.env;
 
 export default {
@@ -36,4 +38,6 @@ export default {
   API_URL,
   LOG_LEVEL_CONSOLE,
   LOG_LEVEL_FILE,
+  EMAIL_ADDRESS,
+  EMAIL_SECRET,
 };

@@ -4,10 +4,6 @@
   <div>
     <form onsubmit="handleOnSubmit(); return false;">
       <div style="width: 100%" class="mt-3">
-        <label for="email">Username</label><br />
-        <input class="form-control" name="email" id="username" placeholder="Your username" required />
-      </div>
-      <div style="width: 100%" class="mt-3">
         <label for="password">New password</label>
         <input
           class="form-control"
@@ -21,9 +17,12 @@
       <div class="col-md-12 mt-3">
         <label id="message" class="text-danger"></label>
       </div>
-      <button class="btn btn-primary" type="submit">Update Password</button>
+
+      <button class="btn btn-primary mt-2 mb-3" type="submit">Update Password</button>
+      <a href="/login">Back to login</a>
     </form>
   </div>
+  <input type="hidden" id="token" name="token" value="{{token}}" />
 
 </div>
 

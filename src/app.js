@@ -6,7 +6,7 @@ import cookieParser from "cookie-parser";
 import cors from "cors";
 import { Server } from "socket.io";
 import __dirname from "./utils.js";
-import { mongoDBConnection } from "./db/mongo.config.js";
+import { mongoDBConnection } from "./services/mongo.config.js";
 import config from "./config/config.js";
 import MessagesManagerDao from "./dao/managers/messagesManager.managers.js";
 import initializePassport from "./config/passport.config.js";
