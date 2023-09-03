@@ -116,13 +116,17 @@ export default class SessionRouter {
     );
 
     // Get session
-    this.router.get(`${this.path}`, [passportCall("jwt"), authorization(["ADMIN", "USER"])], async (req, res, next) => {
-      try {
-        return res.status(200).json(req.user);
-      } catch (error) {
-        next(error);
+    this.router.get(
+      `${this.path}`,
+      [passportCall("jwt"), authorization([RoleType.ADMIN, RoleType.USER, RoleType.PREMIUM])],
+      async (req, res, next) => {
+        try {
+          return res.status(200).json(req.user);
+        } catch (error) {
+          next(error);
+        }
       }
-    });
+    );
 
     this.router.post(`${this.path}/password-reset/begin`, async (req, res, next) => {
       try {

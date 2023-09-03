@@ -1,7 +1,8 @@
-export const AvailableRoles = ["PUBLIC", "USER", "ADMIN"];
-
 export const RoleType = {
   PUBLIC: "PUBLIC",
-  USER: "USER",
-  ADMIN: "ADMIN",
+  USER: RoleType.USER,
+  ADMIN: RoleType.ADMIN,
+  PREMIUM: "PREMIUM",
 };
+
+export const AvailableRoles = Object.keys(RoleType);

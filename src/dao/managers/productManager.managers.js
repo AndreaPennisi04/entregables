@@ -155,4 +155,12 @@ export default class ProductManagerDao {
       throw new ClientError("ProductManagerDao.changeStockForProduct", ErrorCode.DB_ISSUE);
     }
   }
+
+  isProductOwner = async (user, productId) => {
+    const prod = await this.getProductById(productId);
+    if (prod.owner !== user.email) {
+      return false;
+    }
+    return true;
+  };
 }

@@ -12,7 +12,7 @@ const userSchema = new Schema({
   password: Schema.Types.String,
   role: {
     type: Schema.Types.String,
-    default: "USER",
+    default: RoleType.USER,
     enum: Object.values(RoleType),
   },
   age: Schema.Types.Number,

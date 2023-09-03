@@ -56,7 +56,7 @@ export default class BillManagerDao {
 
   getBillById = async (id) => {
     try {
-      const bill = await billModel.findOne({ _id: id }).populate(["products.product", "user"]);
+      const bill = await billModel.findOne({ _id: id }).populate(["products.product", RoleType.USER]);
       return bill;
     } catch ({ message }) {
       throw new ClientError("billing dao", ErrorCode.BILL_MISSING);

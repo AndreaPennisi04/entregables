@@ -1,5 +1,6 @@
 import mongoose, { Schema } from "mongoose";
 import mongoosePaginate from "mongoose-paginate-v2";
+import { RoleType } from "../../constant/role";
 
 const productCollection = "products";
 
@@ -27,6 +28,11 @@ const productSchema = new Schema({
   stock: {
     type: Schema.Types.Number,
     required: true,
+  },
+  owner: {
+    type: Schema.Types.String,
+    required: true,
+    default: RoleType.ADMIN,
   },
 });
 
