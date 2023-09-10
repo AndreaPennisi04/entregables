@@ -16,7 +16,6 @@ export default class ProductRouter {
   }
 
   initProductRoutes() {
-    // Get products
     this.router.get(
       `${this.path}`,
       [passportCall("jwt"), authorization([RoleType.ADMIN, RoleType.USER, RoleType.PREMIUM])],

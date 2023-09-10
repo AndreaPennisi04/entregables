@@ -1,0 +1,207 @@
+paths:
+  /api/v1/product/:
+    get:
+      description: Gets all products available. Roles ADMIN, USER, PREMIUM
+      summary: Lists products
+      parameters:
+        - in: query
+          name: limit
+          schema:
+            type: integer
+          description: The maximum number of items to return
+        - in: query
+          name: page
+          schema:
+            type: integer
+          description: The page offset to be returned
+        - in: query
+          name: sort
+          schema:
+            type: integer
+            enum: [1,-1]
+            default: 1
+          description: This is a parameter that returns items sorted by price asc if 1 and desc if -1
+        - in: query
+          name: query
+          schema:
+            type: string
+          description: When executing a query, you specify your query as a JSON document. The JSON document's syntax is the same as the MongoDB shell.
+          example: { 'code': '2033' }
+      responses:
+        200:
+          description: Returns an array of products
+          content: 
+            application/json:
+              schema:
+                type: array 
+                items:
+                  $ref: '#/components/schemas/Product'
+      tags:
+        - Products
+      security:
+        bearerAuth: []
+    post:
+      description: Create a product. Roles ADMIN, PREMIUM
+      summary: Add a new product
+      requestBody:
+        description: the product that will be added
+        content: 
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Product'
+      responses:
+        200:
+          description: Returns the created product
+          content: 
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Product'
+      tags:
+        - Products
+      security:
+        bearerAuth: []
+  /api/v1/product/{productId}:
+    get:
+      description: Gets a single product based on the id. Roles ADMIN, USER, PREMIUM
+      summary: Get a product
+      parameters:
+        - in: path
+          name: productId
+          schema:
+            type: integer
+          description: The id of the product we are trying to get
+      responses:
+        200:
+          description: Returns a product
+          content: 
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Product'
+      tags:
+        - Products
+      security:
+        bearerAuth: []
+    put:
+      description: Modifies a product. Roles ADMIN,  PREMIUM
+      summary: Update a product
+      parameters:
+        - in: path
+          name: productId
+          schema:
+            type: integer
+          description: The id of the product we are trying to get
+      requestBody:
+        description: the updated product
+        content: 
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Product'
+      responses:
+        200:
+          description: Returns the modified product
+          content: 
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Product'
+      tags:
+        - Products
+      security:
+        bearerAuth: []
+    delete:
+      description: removes a product. Roles ADMIN,  PREMIUM
+      summary: Remove a product
+      parameters:
+        - in: path
+          name: productId
+          schema:
+            type: integer
+          description: The id of the product we are trying to get
+      responses:
+        204:
+          description: An empty confirmation
+      tags:
+        - Products
+      security:
+        bearerAuth: []
+  /api/v1/product/{productId}/stock/{quantity}:
+    post:
+      description: Changes the stock available. Roles ADMIN, PREMIUM
+      summary: Change stock
+      parameters:
+        - in: path
+          name: productId
+          schema:
+            type: integer
+          description: The id of the product we are trying to modify
+        - in: path
+          name: quantity
+          schema:
+            type: integer
+          description: The amount in which the stock will be increased or decreased
+      responses:
+        200:
+          description: Returns a product
+          content: 
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Product'
+      tags:
+        - Products
+      security:
+        bearerAuth: []        
+  /api/v1/mockingproducts:
+    get:
+      description: Mocking products endpoint. Roles ADMIN, USER, PREMIUM
+      responses:
+        200:
+          description: Returns an array of products
+          content: 
+            application/json:
+              schema:
+                type: array 
+                items:
+                  $ref: '#/components/schemas/Product'
+      tags:
+        - Products
+      security:
+        bearerAuth: []
+
+
+
+components:
+  schemas:
+    Product:
+      type: object
+      properties:
+        _id:
+          type: ObjectId
+          description: Autogenerated MongoDb Id
+        title:
+          type: string
+          description: The title for the product
+        description:  
+          type: string
+          description: This is where the description of the product is
+        price:
+          type: number
+          description: The unit price of the item
+        thumbnail:
+          type: string
+          description: The url for a representative image for the product
+        code:
+          type: number
+          description: A unique identifier for the product
+        stock:
+          type: number
+          description: The amount of items available
+        owner:
+          type: string
+          description: The user that added the product, could be a user email address or ADMIN
+      example:
+        _id: ObjectId("64d90e1a5541ef7b6d1ed0a7")
+        title: "Kia EV 9"
+        description: "The Kia EV9 exudes a sense of serene contemporary"
+        price: 34444
+        thumbnail: http://kia.com/ev9/image.jpg
+        code: 7
+        stock: 22

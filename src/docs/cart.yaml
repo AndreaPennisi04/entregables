@@ -1,0 +1,243 @@
+paths:
+  /api/v1/cart:
+    get:
+      summary: Get cart
+      responses:
+        200:
+          description: Returns the user's cart
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Cart'
+        401:
+          description: Unauthorized access
+      tags:
+        - Cart         
+      security:
+        bearerAuth: []         
+    post:
+      summary: Create a new cart
+      responses:
+        200:
+          description: Returns the created cart
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Cart'
+        401:
+          description: Unauthorized access
+      tags:
+        - Cart
+      security:
+        bearerAuth: []        
+  /api/v1/cart/{cartId}:
+    get:
+      summary: Get cart by ID
+      parameters:
+        - name: cartId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          description: Returns the cart items
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Cart'
+        401:
+          description: Unauthorized access
+      tags:
+        - Cart    
+      security:
+        bearerAuth: []              
+    put:
+      summary: Add multiple products to the cart
+      parameters:
+        - name: cartId
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                products:
+                  type: array
+                  items:
+                    type: string
+      responses:
+        200:
+          description: Returns the updated cart
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Cart'
+        401:
+          description: Unauthorized access
+      tags:
+        - Cart          
+      security:
+        bearerAuth: []        
+    delete:
+      summary: Deletes all products from the cart
+      parameters:
+        - name: cartId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          description: Returns the updated cart
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Cart'
+        401:
+          description: Unauthorized access
+      tags:
+        - Cart    
+      security:
+        bearerAuth: []              
+  /api/v1/cart/{cartId}/purchase:
+    post:
+      summary: Create a new purchase from the cart
+      parameters:
+        - name: cartId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          description: Returns the new Cart
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Cart'
+        401:
+          description: Unauthorized access
+      tags:
+        - Cart          
+      security:
+        bearerAuth: []        
+  /api/v1/cart/{cartId}/product/{productId}:
+    post:
+      summary: add a product to a cart
+      description: This endpoint adds the prodcut sent as a parameter in the url to the cart specified in the url as well
+      parameters:
+        - name: cartId
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: productId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          description: The product was added to the cart successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Cart'
+        401:
+          description: Unauthorized access
+      tags:
+        - Cart    
+      security:
+        bearerAuth: []              
+    put:
+      summary: changes the quantity of a product
+      description: Changes the quantity of a particular product in the cart specified
+      parameters:
+        - name: cartId
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: productId
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                quantity:
+                  type: number
+                  description: the amount to be added or substracted to the quantity of a product in the cart
+      responses:
+        200:
+          description: The quantity has changed successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Cart'
+        401:
+          description: Unauthorized access
+      tags:
+        - Cart     
+      security:
+        bearerAuth: []             
+    delete:
+      summary: removes a product from the cart
+      description: Removes a specific product from the cart
+      parameters:
+        - name: cartId
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: productId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          description: The product has been removed successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Cart'
+        401:
+          description: Unauthorized access
+      tags:
+        - Cart     
+      security:
+        bearerAuth: []             
+
+components:
+  schemas:
+    Cart:
+      type: object
+      properties:
+        _id:
+          type: ObjectId
+          description: Autogenerated MongoDb Id
+        user:
+          type: ObjectId
+          description: A reference to the user that the cart belongs to
+        products:
+          type: array
+          items:
+            type: object
+            properties:
+              quantity:
+                type: number
+                description: the amount of each item
+              product:
+                $ref: '#/components/schemas/Product'
+
+

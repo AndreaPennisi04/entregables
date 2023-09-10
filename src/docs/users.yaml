@@ -1,0 +1,21 @@
+paths:
+  /api/v1/users/premium/{userId}:
+    post:
+      summary: Toggles the access to PREMIUM
+      parameters:
+        - in: path
+          name: userId
+          schema:
+            type: string
+          description: The id of the user to change
+      responses:
+        204:
+          description: successfully toggled the user role 
+        401:
+          description: Unauthorized access
+      tags:
+        - Users          
+      security:
+        bearerAuth: []
+
+
