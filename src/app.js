@@ -3,6 +3,7 @@ import passport from "passport";
 import handlebars from "express-handlebars";
 import displayRoutes from "express-routemap";
 import cookieParser from "cookie-parser";
+import swaggerUiExpress from "swagger-ui-express";
 import cors from "cors";
 import { Server } from "socket.io";
 import __dirname from "./utils.js";
@@ -12,6 +13,7 @@ import MessagesManagerDao from "./dao/managers/messagesManager.managers.js";
 import initializePassport from "./config/passport.config.js";
 import { ErrorHandler } from "./middleware/ErrorHandler.middleware.js";
 import { addLogger, getLogger } from "./utils/logger.js";
+import swaggerSpecs from "./services/swaggerService.js";
 
 const { API_VERSION, CURSO, PORT, NODE_ENV } = config;
 
@@ -70,6 +72,8 @@ export default class App {
     viewRoutes.forEach((route) => {
       this.app.use(`/`, route.router);
     });
+
+    this.app.use("/apidocs", swaggerUiExpress.serve, swaggerUiExpress.setup(swaggerSpecs));
 
     this.app.get(`/loggerTest`, (req, res) => {
       try {

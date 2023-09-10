@@ -35,6 +35,25 @@ export default class CartRouter {
       }
     );
 
+    //Post to create a new cart
+    this.router.post(
+      `${this.path}`,
+      [passportCall("jwt"), authorization([RoleType.ADMIN, RoleType.USER, RoleType.PREMIUM])],
+      async (req, res, next) => {
+        try {
+          const { io } = req;
+          const newCart = await this.cartManager.createCart(req.user.userId);
+
+          io.emit("newCartList", newCart);
+          io.emit("newCartMessage", "New cart!!");
+
+          res.status(200).send({ status: "success", payload: newCart });
+        } catch (error) {
+          next(error);
+        }
+      }
+    );
+
     //Get cart by ID
     this.router.get(
       `${this.path}/:cid`,
@@ -55,19 +74,39 @@ export default class CartRouter {
       }
     );
 
-    //Post to create a new cart
-    this.router.post(
-      `${this.path}`,
+    //Put to add multiple products to the cart
+    this.router.put(
+      `${this.path}/:cid`,
       [passportCall("jwt"), authorization([RoleType.ADMIN, RoleType.USER, RoleType.PREMIUM])],
       async (req, res, next) => {
         try {
-          const { io } = req;
-          const newCart = await this.cartManager.createCart(req.user.userId);
+          const cartId = req.params.cid;
+          const products = req.body.products;
 
-          io.emit("newCartList", newCart);
-          io.emit("newCartMessage", "New cart!!");
+          for (const productId of products) {
+            if (req.user.role !== RoleType.ADMIN && (await this.productManager.isProductOwner(req.user, productId))) {
+              throw new ClientError("Cart", ErrorCode.UNAUTHORISED);
+            }
+          }
 
-          res.status(200).send({ status: "success", payload: newCart });
+          const cart = await this.cartManager.addMultipleProductsToCart(cartId, products);
+
+          res.status(200).send({ status: "success", payload: cart });
+        } catch (error) {
+          next(error);
+        }
+      }
+    );
+
+    // deletes all products from the cart
+    this.router.delete(
+      `${this.path}/:cid`,
+      [passportCall("jwt"), authorization([RoleType.ADMIN, RoleType.USER, RoleType.PREMIUM])],
+      async (req, res, next) => {
+        try {
+          const cartId = req.params.cid;
+          const cart = await this.cartManager.deleteAllProducts(cartId);
+          res.status(200).send({ status: "success", payload: cart });
         } catch (error) {
           next(error);
         }
@@ -112,30 +151,6 @@ export default class CartRouter {
       }
     );
 
-    //Put to add multiple products to the cart
-    this.router.put(
-      `${this.path}/:cid`,
-      [passportCall("jwt"), authorization([RoleType.ADMIN, RoleType.USER, RoleType.PREMIUM])],
-      async (req, res, next) => {
-        try {
-          const cartId = req.params.cid;
-          const products = req.body.products;
-
-          for (const productId of products) {
-            if (req.user.role !== RoleType.ADMIN && (await this.productManager.isProductOwner(req.user, productId))) {
-              throw new ClientError("Cart", ErrorCode.UNAUTHORISED);
-            }
-          }
-
-          const cart = await this.cartManager.addMultipleProductsToCart(cartId, products);
-
-          res.status(200).send({ status: "success", payload: cart });
-        } catch (error) {
-          next(error);
-        }
-      }
-    );
-
     //Put to modify quantity of a product in a cart
     this.router.put(
       `${this.path}/:cid/product/:pid`,
@@ -167,21 +182,6 @@ export default class CartRouter {
           const cartId = req.params.cid;
           const productId = req.params.pid;
           const cart = await this.cartManager.deleteProduct(cartId, productId);
-          res.status(200).send({ status: "success", payload: cart });
-        } catch (error) {
-          next(error);
-        }
-      }
-    );
-
-    // deletes all products from the cart
-    this.router.delete(
-      `${this.path}/:cid`,
-      [passportCall("jwt"), authorization([RoleType.ADMIN, RoleType.USER, RoleType.PREMIUM])],
-      async (req, res, next) => {
-        try {
-          const cartId = req.params.cid;
-          const cart = await this.cartManager.deleteAllProducts(cartId);
           res.status(200).send({ status: "success", payload: cart });
         } catch (error) {
           next(error);
