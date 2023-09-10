@@ -25,6 +25,4 @@ const swaggerSpecs = swaggerJSDoc({
   apis: [`${__dirname}/docs/**/*.yaml`],
 });
 
-console.log(JSON.stringify(swaggerSpecs));
-
 export default swaggerSpecs;
