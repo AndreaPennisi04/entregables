@@ -7,6 +7,7 @@ import { ClientError } from "../utils/ClientError.js";
 import { ErrorCode } from "../utils/ErrorCode.js";
 import EmailService from "../services/emailService.js";
 import config from "../config/config.js";
+import { RoleType } from "../constant/role.js";
 
 export default class SessionRouter {
   path = "/session";

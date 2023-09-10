@@ -7,7 +7,7 @@ import BillRouter from "./routes/bill.routes.js";
 
 const app = new App(
   [new CartRouter(), new ProductRouter(), new BillRouter()],
-  [new ViewsRouter(), new SessionRouter(), new ]
+  [new ViewsRouter(), new SessionRouter()]
 );
 
 app.listen();

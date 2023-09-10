@@ -1,6 +1,6 @@
 import mongoose, { Schema } from "mongoose";
 import mongoosePaginate from "mongoose-paginate-v2";
-import { RoleType } from "../../constant/role";
+import { RoleType } from "../../constant/role.js";
 
 const productCollection = "products";
 

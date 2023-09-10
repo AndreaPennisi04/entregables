@@ -1,7 +1,7 @@
 export const RoleType = {
   PUBLIC: "PUBLIC",
-  USER: RoleType.USER,
-  ADMIN: RoleType.ADMIN,
+  USER: "USER",
+  ADMIN: "ADMIN",
   PREMIUM: "PREMIUM",
 };
 

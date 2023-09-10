@@ -4,6 +4,7 @@ import CartManagerDao from "../dao/managers/cartManager.managers.js";
 import { authorization } from "../middleware/authorization.middleware.js";
 import { passportCall } from "../utils/jwt.js";
 import BillManagerDao from "../dao/managers/billManager.managers.js";
+import { RoleType } from "../constant/role.js";
 
 export default class ViewsRouter {
   path = "/views";
