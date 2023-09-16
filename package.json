@@ -6,11 +6,13 @@
   "main": "app.js",
   "scripts": {
     "desarrollo": "cross-env NODE_ENV=desarrollo nodemon  --inspect=10101 --enable-source-maps ./src/index.js",
-    "produccion": "cross-env NODE_ENV=produccion nodemon ./src/index.js"
+    "produccion": "cross-env NODE_ENV=produccion nodemon ./src/index.js",
+    "test": "mocha './src/**/*.test.js'"
   },
   "author": "Andrea Pennisi",
   "license": "ISC",
   "dependencies": {
+    "@faker-js/faker": "^8.0.2",
     "bcrypt": "^5.1.0",
     "bootstrap": "^5.3.0-alpha3",
     "connect-mongo": "^5.0.0",
@@ -22,7 +24,6 @@
     "express-compression": "^1.0.2",
     "express-handlebars": "^7.0.7",
     "express-routemap": "^1.6.0",
-    "@faker-js/faker": "^8.0.2",
     "handlebars": "^4.7.7",
     "jsonwebtoken": "^9.0.1",
     "mongoose": "^7.3.0",
@@ -40,5 +41,10 @@
     "swagger-ui-express": "^5.0.0",
     "websockets": "^0.2.0",
     "winston": "^3.10.0"
+  },
+  "devDependencies": {
+    "chai": "^4.3.8",
+    "mocha": "^10.2.0",
+    "supertest": "^6.3.3"
   }
 }

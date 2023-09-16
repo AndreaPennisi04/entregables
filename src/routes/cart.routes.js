@@ -113,7 +113,6 @@ export default class CartRouter {
       }
     );
 
-    //Post to create a new cart
     this.router.post(
       `${this.path}/:cid/purchase`,
       [passportCall("jwt"), authorization([RoleType.ADMIN, RoleType.USER, RoleType.PREMIUM])],
@@ -183,6 +182,22 @@ export default class CartRouter {
           const productId = req.params.pid;
           const cart = await this.cartManager.deleteProduct(cartId, productId);
           res.status(200).send({ status: "success", payload: cart });
+        } catch (error) {
+          next(error);
+        }
+      }
+    );
+
+    // deletes a cart completely
+    this.router.delete(
+      `${this.path}/:cid/removeCart`,
+      [passportCall("jwt"), authorization([RoleType.ADMIN, RoleType.USER, RoleType.PREMIUM])],
+      async (req, res, next) => {
+        try {
+          const cartId = req.params.cid;
+
+          await this.cartManager.removeCart(cartId);
+          res.status(204).send();
         } catch (error) {
           next(error);
         }

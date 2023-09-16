@@ -50,6 +50,17 @@ export default class SessionRouter {
       }
     });
 
+    // delete user - this is for testing purposes
+    this.router.delete(`${this.path}/remove/:uid`, async (req, res, next) => {
+      try {
+        const userId = req.params.uid;
+        await this.userManager.removeUser(userId);
+        return res.status(204).send();
+      } catch (error) {
+        next(error);
+      }
+    });
+
     //Register
     this.router.post(`${this.path}/register`, async (req, res, next) => {
       try {

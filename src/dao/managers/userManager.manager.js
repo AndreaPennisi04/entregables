@@ -111,6 +111,17 @@ export default class UserManagerDao {
     }
   };
 
+  removeUser = async (userId) => {
+    try {
+      await userModel.deleteOne({ _id: userId });
+    } catch (error) {
+      if (error.code) {
+        throw error;
+      }
+      throw new ClientError("UserManagerDao.removeUser", ErrorCode.DB_ISSUE);
+    }
+  };
+
   getUserById = async (id) => {
     try {
       const user = await userModel.find({ _id: id });

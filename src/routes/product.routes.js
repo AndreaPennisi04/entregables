@@ -156,7 +156,7 @@ export default class ProductRouter {
           const productId = req.params.pid;
 
           if (req.user.role !== RoleType.ADMIN && !(await this.productManager.isProductOwner(req.user, productId))) {
-            throw new ClientError("Cart", ErrorCode.UNAUTHORISED);
+            throw new ClientError("Product", ErrorCode.UNAUTHORISED);
           }
 
           await this.productManager.removeProduct(productId);

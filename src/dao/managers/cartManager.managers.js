@@ -140,6 +140,17 @@ export default class CartManagerDao {
     }
   }
 
+  removeCart = async (id) => {
+    try {
+      await cartModel.deleteOne({ _id: id });
+    } catch (error) {
+      if (error.code) {
+        throw error;
+      }
+      throw new ClientError("CartManagerDao.removeCart", ErrorCode.DB_ISSUE);
+    }
+  };
+
   // Add product to cart
   async addProductToCart(cartId, productId) {
     try {
