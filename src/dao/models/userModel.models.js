@@ -16,6 +16,24 @@ const userSchema = new Schema({
     enum: Object.values(RoleType),
   },
   age: Schema.Types.Number,
+  last_connection: {
+    type: Date,
+    default: Date.now,
+  },
+  documents: {
+    type: [
+      {
+        name: {
+          type: Schema.Types.String,
+          required: true,
+        },
+        reference: {
+          type: Schema.Types.String,
+          required: true,
+        },
+      },
+    ],
+  },
 });
 
 export const userModel = mongoose.model(collection, userSchema);

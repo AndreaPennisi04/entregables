@@ -42,13 +42,18 @@ export default class SessionRouter {
     });
 
     // Get logout
-    this.router.get(`${this.path}/logout`, async (req, res, next) => {
-      try {
-        res.clearCookie("eCommerceCookieToken").send();
-      } catch (error) {
-        next(error);
+    this.router.get(
+      `${this.path}/logout`,
+      [passportCall("jwt"), authorization([RoleType.ADMIN, RoleType.USER, RoleType.PREMIUM])],
+      async (req, res, next) => {
+        try {
+          await this.userManager.registerConnection(req.user.userId);
+          res.clearCookie("eCommerceCookieToken").send();
+        } catch (error) {
+          next(error);
+        }
       }
-    });
+    );
 
     // delete user - this is for testing purposes
     this.router.delete(`${this.path}/remove/:uid`, async (req, res, next) => {

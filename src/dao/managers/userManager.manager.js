@@ -5,7 +5,7 @@ import { userModel } from "../models/userModel.models.js";
 export default class UserManagerDao {
   login = async (email, password) => {
     try {
-      const user = await userModel.findOne({ email });
+      const user = await userModel.findOneAndUpdate({ email }, { last_connection: Date.now() });
       const valid = isValidPassword(user, password);
       if (!valid) {
         return undefined;
@@ -13,6 +13,7 @@ export default class UserManagerDao {
       if (!user) {
         return undefined;
       }
+
       delete user.password;
       return {
         firstName: user.first_name,
@@ -21,12 +22,24 @@ export default class UserManagerDao {
         userId: user._id,
         email: user.email,
         age: user.age,
+        last_connection: user.last_connection,
       };
     } catch (error) {
       if (error.code) {
         throw error;
       }
       throw new ClientError("UserManagerDao.login", ErrorCode.DB_ISSUE);
+    }
+  };
+
+  registerConnection = async (userId) => {
+    try {
+      await userModel.updateOne({ _id: userId }, { last_connection: Date.now() });
+    } catch (error) {
+      if (error.code) {
+        throw error;
+      }
+      throw new ClientError("UserManagerDao.registerConnection", ErrorCode.DB_ISSUE);
     }
   };
 
