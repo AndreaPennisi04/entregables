@@ -21,6 +21,7 @@ const {
   LOG_LEVEL_FILE,
   EMAIL_ADDRESS,
   EMAIL_SECRET,
+  STRIPE_KEY,
 } = process.env;
 
 export default {
@@ -40,4 +41,5 @@ export default {
   LOG_LEVEL_FILE,
   EMAIL_ADDRESS,
   EMAIL_SECRET,
+  STRIPE_KEY,
 };

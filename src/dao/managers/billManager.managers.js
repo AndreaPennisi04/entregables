@@ -4,6 +4,7 @@ import CartManagerDao from "./cartManager.managers.js";
 import ProductManagerDao from "./productManager.managers.js";
 import { ClientError } from "../../utils/ClientError.js";
 import { ErrorCode } from "../../utils/ErrorCode.js";
+import { BillStatus } from "../../utils/BillStatus.js";
 
 export default class BillManagerDao {
   cartManager;
@@ -54,9 +55,45 @@ export default class BillManagerDao {
     }
   }
 
+  async generateTransactionId(billId) {
+    const transactionId = crypto.randomBytes(16).toString("hex");
+    await billModel.updateOne({ _id: billId }, { transactionId });
+    return transactionId;
+  }
+
+  async completePayment(billId, transactionId) {
+    const result = await billModel.updateOne(
+      { _id: billId, transactionId, status: BillStatus.NotPaid },
+      { status: BillStatus.Paid, transactionId: null }
+    );
+    if (result.modifiedCount !== 1) {
+      throw new ClientError(
+        "Bills",
+        ErrorCode.BAD_PARAMETERS,
+        "Something went wrong",
+        "Something went wrong during the checkout process please contact our sales team"
+      );
+    }
+    return;
+  }
+  async cancelCheckout(billId) {
+    const result = await billModel.updateOne({ _id: billId, status: BillStatus.NotPaid }, { transactionId: null });
+
+    if (result.modifiedCount !== 1) {
+      throw new ClientError(
+        "Bills",
+        ErrorCode.BAD_PARAMETERS,
+        "Something went wrong",
+        "Something went wrong during the checkout process please contact our sales team"
+      );
+    }
+
+    return;
+  }
+
   getBillById = async (id) => {
     try {
-      const bill = await billModel.findOne({ _id: id }).populate(["products.product", RoleType.USER]);
+      const bill = await billModel.findOne({ _id: id }).populate(["products.product", "user"]);
       return bill;
     } catch ({ message }) {
       throw new ClientError("billing dao", ErrorCode.BILL_MISSING);
