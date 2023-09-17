@@ -1,5 +1,5 @@
 export const ErrorCode = {
-  BAD_PARAMETERS: 0,
+  BAD_PARAMETERS: 7,
   CART_MISSING: 1,
   PRODUCT_MISSING: 2,
   UNAUTHORISED: 3,

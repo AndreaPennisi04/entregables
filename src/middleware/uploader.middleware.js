@@ -1,12 +1,13 @@
 import multer from "multer";
-import __dirname from "../utils.js";
+import getFolderNameFromFileType from "../utils/getFolderNameFromFileType.js";
+import fs from "fs";
+import { FileTypes } from "../utils/FileTypes.js";
 
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
-    let folderName = `${__dirname}/public/uploads`;
-    // LLEGUE HASTA ACA VER DE TRAER TYPE DEL ARCHIVO EN EL REQ PARA ACOMODAR POR CARPETA
-
-    cb(null, `${__dirname}/public/documents`);
+    const tmpFolder = getFolderNameFromFileType(FileTypes.TEMP, req.user.userId);
+    fs.mkdirSync(tmpFolder.internal, { recursive: true });
+    cb(null, tmpFolder.internal);
   },
   filename: (req, file, cb) => {
     cb(null, file.originalname);

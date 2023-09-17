@@ -1,5 +1,6 @@
 import mongoose, { Schema } from "mongoose";
 import { RoleType } from "../../constant/role.js";
+import { FileTypes } from "../../utils/FileTypes.js";
 
 const collection = "Users";
 const userSchema = new Schema({
@@ -23,12 +24,21 @@ const userSchema = new Schema({
   documents: {
     type: [
       {
-        name: {
+        externalPath: {
           type: Schema.Types.String,
           required: true,
         },
-        reference: {
+        internalPath: {
           type: Schema.Types.String,
+          required: true,
+        },
+        originalFilename: {
+          type: Schema.Types.String,
+          required: true,
+        },
+        fileType: {
+          type: Schema.Types.String,
+          enum: Object.values(FileTypes),
           required: true,
         },
       },
