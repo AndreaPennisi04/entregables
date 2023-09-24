@@ -1,11 +1,15 @@
 import { RoleType } from "../../constant/role.js";
+import { ClientError } from "../../utils/ClientError.js";
+import { ErrorCode } from "../../utils/ErrorCode.js";
+import { FileTypes } from "../../utils/FileTypes.js";
 import { createHash, isValidPassword } from "../../utils/encrypt.js";
+import getFolderNameFromFileType from "../../utils/getFolderNameFromFileType.js";
 import { userModel } from "../models/userModel.models.js";
 
 export default class UserManagerDao {
   login = async (email, password) => {
     try {
-      const user = await userModel.findOne({ email });
+      const user = await userModel.findOneAndUpdate({ email }, { last_connection: Date.now() });
       const valid = isValidPassword(user, password);
       if (!valid) {
         return undefined;
@@ -13,6 +17,7 @@ export default class UserManagerDao {
       if (!user) {
         return undefined;
       }
+
       delete user.password;
       return {
         firstName: user.first_name,
@@ -21,6 +26,7 @@ export default class UserManagerDao {
         userId: user._id,
         email: user.email,
         age: user.age,
+        last_connection: user.last_connection,
       };
     } catch (error) {
       if (error.code) {
@@ -30,14 +36,68 @@ export default class UserManagerDao {
     }
   };
 
+  registerConnection = async (userId) => {
+    try {
+      await userModel.updateOne({ _id: userId }, { last_connection: Date.now() });
+    } catch (error) {
+      if (error.code) {
+        throw error;
+      }
+      throw new ClientError("UserManagerDao.registerConnection", ErrorCode.DB_ISSUE);
+    }
+  };
+
+  createFile = async (userId, { originalFilename, fileType }) => {
+    try {
+      const paths = getFolderNameFromFileType(fileType, userId);
+      await userModel.updateOne(
+        { _id: userId },
+        {
+          $push: {
+            documents: {
+              externalPath: paths.external,
+              internalPath: paths.internal,
+              originalFilename,
+              fileType,
+            },
+          },
+        }
+      );
+    } catch (error) {
+      if (error.code) {
+        throw error;
+      }
+      throw new ClientError("UserManagerDao.registerConnection", ErrorCode.DB_ISSUE);
+    }
+  };
+
   togglePremium = async (userId) => {
     try {
       const user = await userModel.findOne({ _id: userId });
 
+      if (user.role === RoleType.USER) {
+        const hasDocumentation = await userModel.findOne({
+          _id: userId,
+          $and: [
+            { "documents.fileType": FileTypes.ID },
+            { "documents.fileType": FileTypes.ADDRESS_PROOF },
+            { "documents.fileType": FileTypes.ACCOUNT_STATEMENT },
+          ],
+        });
+        if (!hasDocumentation) {
+          throw new ClientError(
+            "UserService",
+            ErrorCode.BAD_PARAMETERS,
+            400,
+            "You can't make a user premium if they have not uploaded all the docuemntation",
+            "missing docs"
+          );
+        }
+      }
+
       await userModel.updateOne(
         { _id: userId },
         {
-          ...user,
           role: user.role === RoleType.USER || user.role === RoleType.ADMIN ? RoleType.PREMIUM : RoleType.USER,
         }
       );
@@ -124,7 +184,11 @@ export default class UserManagerDao {
 
   getUserById = async (id) => {
     try {
-      const user = await userModel.find({ _id: id });
+      const [user] = await userModel.find({ _id: id });
+      if (!user) {
+        return;
+      }
+
       delete user.password;
       return {
         firstName: user.first_name,
