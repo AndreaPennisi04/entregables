@@ -1,4 +1,5 @@
 import mongoose, { Schema } from "mongoose";
+import { BillStatus } from "../../utils/BillStatus.js";
 
 const billCollection = "bill";
 
@@ -20,6 +21,15 @@ const billSchema = new Schema({
   total: {
     type: Schema.Types.Number,
     required: true,
+  },
+  transactionId: {
+    type: Schema.Types.String,
+  },
+  status: {
+    type: Schema.Types.String,
+    required: true,
+    default: BillStatus.NotPaid,
+    enum: Object.values(BillStatus),
   },
   products: {
     type: [

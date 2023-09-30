@@ -31,6 +31,22 @@ export default class ViewsRouter {
       }
     });
 
+    this.router.get(`${this.path}/success`, async (req, res, next) => {
+      try {
+        res.render("success");
+      } catch (error) {
+        next(error);
+      }
+    });
+
+    this.router.get(`${this.path}/cancelled`, async (req, res, next) => {
+      try {
+        res.render("cancelled");
+      } catch (error) {
+        next(error);
+      }
+    });
+
     this.router.get(
       `${this.path}/products/:pn`,
       [passportCall("jwt"), authorization([RoleType.ADMIN, RoleType.USER, RoleType.PREMIUM])],

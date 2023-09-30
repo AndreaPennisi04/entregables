@@ -14,6 +14,7 @@ import initializePassport from "./config/passport.config.js";
 import { ErrorHandler } from "./middleware/ErrorHandler.middleware.js";
 import { addLogger, getLogger } from "./utils/logger.js";
 import swaggerSpecs from "./services/swaggerService.js";
+import { addHeaders } from "./middleware/addHeaders.middleware.js";
 
 const { API_VERSION, CURSO, PORT, NODE_ENV } = config;
 
@@ -61,6 +62,7 @@ export default class App {
     this.app.use(express.urlencoded({ extended: true }));
     this.app.use(cookieParser());
     this.app.use(express.static(`${__dirname}/public`));
+    this.app.use(addHeaders);
     initializePassport();
     this.app.use(passport.initialize());
   }
