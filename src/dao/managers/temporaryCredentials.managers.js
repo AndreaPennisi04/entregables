@@ -36,7 +36,7 @@ export default class TemporaryCredentialsDao {
       .findOne({
         token,
       })
-      .populate(RoleType.USER);
+      .populate("user");
 
     return result.user;
   };
