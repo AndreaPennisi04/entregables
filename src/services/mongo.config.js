@@ -14,8 +14,8 @@ const configConnection = {
 };
 
 export const mongoDBConnection = async () => {
+  const logger = getLogger();
   try {
-    const logger = getLogger();
     await connect(configConnection.url, configConnection.options);
     logger.info(`CONNECCION MONGO URL: ${configConnection.url.substring(0, 20)} =======`);
   } catch (err) {
