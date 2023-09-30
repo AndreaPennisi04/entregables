@@ -1,3 +1,4 @@
+import { RoleType } from "../../constant/role.js";
 import { generateToken } from "../../utils/encrypt.js";
 import { temporaryCredentialsModel } from "../models/temporaryCredentialsModel.models.js";
 import { userModel } from "../models/userModel.models.js";
@@ -31,16 +32,12 @@ export default class TemporaryCredentialsDao {
   };
 
   validateTemporaryCredentials = async (token) => {
-    try {
-      const result = await temporaryCredentialsModel
-        .findOne({
-          token,
-        })
-        .populate(RoleType.USER);
+    const result = await temporaryCredentialsModel
+      .findOne({
+        token,
+      })
+      .populate(RoleType.USER);
 
-      return result.user;
-    } catch (error) {
-      return;
-    }
+    return result.user;
   };
 }
