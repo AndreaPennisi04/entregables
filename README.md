@@ -11,5 +11,5 @@
 ## Tecnologías utilizadas
 *[Java Script](#JavaScript)
 ## Personas Desarrolladoras del Proyecto
-<h3>Autor</h3>
-<p>*Andrea Pennisi</p>
+## Autor
+<p style="color: red;">*Andrea Pennisi</p>
