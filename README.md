@@ -4,13 +4,12 @@
 </p>
 <br>
 
-## Índice
 ## Descripción del Proyecto
 ## Estado del proyecto
 ## Demostración de funciones y aplicaciones
 ## Acceso al Proyecto
 ## Tecnologías utilizadas
-## Personas Contribuyentes
+*[Java Script](#JavaScript)
 ## Personas Desarrolladoras del Proyecto
-## Licencia
-
+<h3>Autor</h3>
+<p>*Andrea Pennisi</p>
