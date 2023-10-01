@@ -45,7 +45,7 @@ export default class BillRouter {
           const sucessUrl = new URL(`/api/${API_VERSION}/${this.path}/${billId}/finish-checkout`, API_URL);
           sucessUrl.searchParams.append("transactionId", transactionId);
 
-          const cancelUrl = new URL(`${this.path}/${billId}/cancel-checkout`, API_URL);
+          const cancelUrl = new URL(`/api/${API_VERSION}/${this.path}/${billId}/cancel-checkout`, API_URL);
 
           const session = await stripe.checkout.sessions.create({
             mode: "payment",
