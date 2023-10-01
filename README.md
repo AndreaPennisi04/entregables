@@ -10,6 +10,20 @@
 ## Acceso al Proyecto
 ## Tecnologías utilizadas
 *[Java Script](#JavaScript)
+*[Node js](#NodeJS)
+*[MongoDB](#MongoDB)
+*[Express](#Express)
+*[JWT](#JWT)
+*[Docket](#Docker)
+*[Middleware](#Middleware)
+*[Handdlebars](#Handlebars)
+*[Mongoose](#Mongoose)
+*[Nodemailer](#Nodemailer)
+*[Mock](#Mock)
+*[Chai](#Chai)
+*[Swagger](#Swagger)
+*[Stripe](#Stripe)
+*[TypeScript](#TypeScript)
 ## Temarios Aplicados
 - Callbacks, Funciones JS, Promesas, Sincronismo y Asincronismo, Archivos sincronicos, File system, Promesas
 - Paquetes NPM: Node js, NPM
@@ -32,8 +46,9 @@
 - Testing Unitario: Mocha y Chai
 - Testing Avanzado: Testing de integracion, Testing con super test, Testing de elementos Avanzados
 - Frameworks de desarrollo: Nest JS, Conexion de Nest JS a Mongo
+- TypeScript
 - Autenticacion con JWT
 - Product cloud: Configuracion de pipelines en Railway.app
-- Pasarelas de pagos
+- Pasarelas de pagos: Stripe
 ## Autor
 <p style="color: red;">*Andrea Pennisi</p>
