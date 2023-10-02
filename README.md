@@ -4,28 +4,41 @@
 </p>
 <br>
 
-## Descripción del Proyecto
-## Estado del proyecto
-## Demostración de funciones y aplicaciones
-## Acceso al Proyecto
+## Project description
+
+The site is a imaginary brand site to sell vehicles though a portal in a eCommerce way. The project was created as part of a training course for the technologies mentioned below.
+
+## Project status
+
+The project is finished and tested but never used in a live customer facing environment
+
+## Delivery
+
+The project is ready to be deployed as a docker container but it needs a mongoDb instance running somewhere. In my case I am using MongoDb Atlas
+
+## Demo
+
 https://entregables-production.up.railway.app/login
-## Tecnologías utilizadas
-*[Java Script](#JavaScript)
-*[Node js](#NodeJS)
-*[MongoDB](#MongoDB)
-*[Express](#Express)
-*[JWT](#JWT)
-*[Docket](#Docker)
-*[Middleware](#Middleware)
-*[Handdlebars](#Handlebars)
-*[Mongoose](#Mongoose)
-*[Nodemailer](#Nodemailer)
-*[Mock](#Mock)
-*[Chai](#Chai)
-*[Swagger](#Swagger)
-*[Stripe](#Stripe)
-*[TypeScript](#TypeScript)
-## Temarios Aplicados
+
+## Used technologies
+
+- [Javascript](#Javascript)
+- [Node js](#NodeJS)
+- [MongoDB](#MongoDB)
+- [Express](#Express)
+- [JWT](#JWT)
+- [Docket](#Docker)
+- [Middleware](#Middleware)
+- [Handlebars](#Handlebars)
+- [Mongoose](#Mongoose)
+- [Nodemailer](#Nodemailer)
+- [Mock](#Mock)
+- [Chai](#Chai)
+- [Swagger](#Swagger)
+- [Stripe](#Stripe)
+
+## Some specific subjects that are covered in the project
+
 - Callbacks, Funciones JS, Promesas, Sincronismo y Asincronismo, Archivos sincronicos, File system, Promesas
 - Paquetes NPM: Node js, NPM
 - Servidores web: Servidores con express JS y Objeto request
@@ -51,5 +64,37 @@ https://entregables-production.up.railway.app/login
 - Autenticacion con JWT
 - Product cloud: Configuracion de pipelines en Railway.app
 - Pasarelas de pagos: Stripe
-## Autor
-<p style="color: red;">*Andrea Pennisi</p>
+
+## Local setup
+
+You need to create a file called
+
+```console
+.env.desarrollo.local
+```
+
+Here is an example:
+
+```console
+API_VERSION=v1
+CURSO=43335
+DB_CNN=mongodb+srv://YOURMONGOKEY:YOURMONGOSECRET@cluster55115.tp5oprc.mongodb.net/
+DB_NAME=ecommerce
+NODE_ENV=desarrollo
+PORT=8080
+SIGNING_SECRET=YOURSECRET
+GITHUB_SECRET=YOURGITHUBSECRET
+GITHUB_APP_ID=YOURAPPID
+GITHUB_CLIENT_ID=YOURGITHUBCLIENTID
+GITHUB_CALLBACK_URL=http://localhost:8080/session/gitHubCallback
+API_URL=http://localhost:8080
+LOG_LEVEL_CONSOLE=debug
+LOG_LEVEL_FILE=error
+EMAIL_ADDRESS=pennisicoderhouse@gmail.com
+EMAIL_SECRET=xxxxxxxxxxx
+STRIPE_KEY=dasdasdasdasdas
+```
+
+## Author
+
+<p style="color: red;">Andrea Pennisi</p>
