@@ -22,20 +22,17 @@ https://entregables-production.up.railway.app/login
 
 ## Used technologies
 
-- [Javascript](#Javascript)
-- [Node js](#NodeJS)
-- [MongoDB](#MongoDB)
-- [Express](#Express)
-- [JWT](#JWT)
-- [Docket](#Docker)
-- [Middleware](#Middleware)
-- [Handlebars](#Handlebars)
-- [Mongoose](#Mongoose)
-- [Nodemailer](#Nodemailer)
-- [Mock](#Mock)
-- [Chai](#Chai)
-- [Swagger](#Swagger)
-- [Stripe](#Stripe)
+- <a href="#"><img alt="Javascript" src="https://img.shields.io/badge/Javascript%20-%23FF5100.svg?logo=JWT&logoColor=blue"></a>
+- <a href="#"><img alt="NodeJS" src="https://img.shields.io/badge/NodeJS%20-%2308000.svg?logo=JWT&logoColor=blue"></a>
+- <a href="#"><img alt="MongoDB" src="https://img.shields.io/badge/MongoDB%20-%230000FF.svg?logo=JWT&logoColor=blue"></a>
+- <a href="#"><img alt="express" src="https://img.shields.io/badge/express%20-%23FF0000.svg?logo=express&logoColor=white"></a>
+- <a href="#"><img alt="JWT" src="https://img.shields.io/badge/JWT%20-%23Fr5000.svg?logo=JWT&logoColor=blue"></a>
+- <a href="#"><img alt="Docker" src="https://img.shields.io/badge/Docker%20-%23FFFF00.svg?logo=JWT&logoColor=blue"></a>
+- <a href="#"><img alt="Handlebars" src="https://img.shields.io/badge/Hnadlebars%20-%23FF8789.svg?logo=JWT&logoColor=blue"></a>
+- <a href="#"><img alt="Mongoose" src="https://img.shields.io/badge/Mongoose%20-%2300FFFF.svg?logo=JWT&logoColor=blue"></a>
+- <a href="#"><img alt="Nodemailer" src="https://img.shields.io/badge/Nodemailer%20-%23FFFFF0.svg?logo=JWT&logoColor=blue"></a>
+- <a href="#"><img alt="Swagger" src="https://img.shields.io/badge/Swagger%20-%23FF00FF.svg?logo=JWT&logoColor=blue"></a>
+- <a href="#"><img alt="Stripe" src="https://img.shields.io/badge/Stripe%20-%23C0C0C0.svg?logo=JWT&logoColor=blue"></a>
 
 ## Some specific subjects that are covered in the project
 
