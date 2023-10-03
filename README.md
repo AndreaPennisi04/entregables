@@ -6,15 +6,73 @@
 
 ## Project description
 
-The site is a imaginary brand site to sell vehicles though a portal in a eCommerce way. The project was created as part of a training course for the technologies mentioned below.
+The site is an imaginary brand site to sell vehicles through a portal in an eCommerce way. The project was created as part of a training course for the technologies mentioned below.
 
 ## Project status
 
-The project is finished and tested but never used in a live customer facing environment
+The project is finished and tested but never used in a live customer-facing environment.
+
+## Project Structure
+
+```
+Entregables/
+|
+|
+src/
+|__config/
+|  | config.js
+|  | psspor.config.js
+|  
+|__constant/      
+|  | role.js     
+|       
+|__dao/
+|  |__managers/
+|  |  | billManager.manager.js
+|  |  | cartManager.manager.js
+|  |  | messagesManager.manager.js
+|  |  | productManager.manager.js
+|  |  | temporaryCredentials.manager.js
+|  |  | userManager.manager.js
+|  |__models/
+|     | billModel.models.js
+|     | cartModel.models.js
+|     | messagesModel.models.js
+|     | productModel.models.js
+|     | temporaryCredentialsModel.models.js
+|     | userModel.models.js
+|
+|__docs/
+|
+|__middleware/
+|
+|__public/
+|
+|__routes/
+|  |  bill.routes.js
+|  |  cart.routes.js
+|  |  product.routes.js
+|  |  session.routes.js
+|  |  users.routes.js
+|  |  views.routes.js
+|       
+|__services/
+|
+|__utils/
+|
+|__views/
+|
+|
+| app.js
+| CartManager.js
+| index.js
+| ProductManager.js
+| utils.js
+```
 
 ## Delivery
 
-The project is ready to be deployed as a docker container but it needs a mongoDb instance running somewhere. In my case I am using MongoDb Atlas
+The project is ready to be deployed as a docker container but it needs a mongoDb instance running somewhere. In my case, I am using MongoDB Atlas
 
 ## Demo
 
